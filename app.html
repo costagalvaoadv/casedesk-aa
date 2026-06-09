@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Costa Galvão · Auxílio-Acidente Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F6F3;
+  --white:#FFFFFF;
+  --surface:#FAFAF8;
+  --border:#E8E5DF;
+  --border2:#D4D0C8;
+  --text:#1A1916;
+  --text2:#6B6760;
+  --text3:#A8A49C;
+  --accent:#1B3A5C;
+  --accent-light:#EEF3F9;
+  --accent-hover:#14304F;
+  --green:#166534;
+  --green-bg:#F0FDF4;
+  --green-border:#BBF7D0;
+  --amber:#92400E;
+  --amber-bg:#FFFBEB;
+  --amber-border:#FDE68A;
+  --red:#991B1B;
+  --red-bg:#FEF2F2;
+  --red-border:#FECACA;
+  --purple:#4C1D95;
+  --purple-bg:#F5F3FF;
+  --r:10px;--r2:6px;--r3:16px;
+  font-size:15px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* SIDEBAR */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--accent);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:50}
+.sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid #ffffff18}
+.sidebar-logo-icon{width:36px;height:36px;background:#ffffff18;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.sidebar-logo-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sidebar-logo-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+.sidebar-logo-sub{font-size:11px;color:#ffffff80;margin-top:3px}
+.sidebar-nav{padding:14px 10px;flex:1}
+.nav-section{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ffffff50;padding:0 10px;margin:14px 0 6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r2);font-size:13px;color:#ffffffa0;cursor:pointer;transition:.15s;border:none;background:none;width:100%;text-align:left;font-family:'Inter',sans-serif}
+.nav-item:hover{background:#ffffff15;color:#fff}
+.nav-item.active{background:#ffffff20;color:#fff;font-weight:500}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sidebar-footer{padding:14px 10px;border-top:1px solid #ffffff18}
+.config-btn{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--r2);font-size:12px;color:#ffffff70;cursor:pointer;transition:.15s;border:none;background:none;width:100%;font-family:'Inter',sans-serif}
+.config-btn:hover{background:#ffffff15;color:#fff}
+.config-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;margin-left:auto;flex-shrink:0}
+.conn-dot.off{background:#f87171}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.topbar-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--text)}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;transition:.15s}
+.btn-primary:hover:not(:disabled){background:var(--accent-hover)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.btn-secondary{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:var(--white);color:var(--text2);border:1px solid var(--border);border-radius:var(--r2);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:.15s}
+.btn-secondary:hover{background:var(--surface);border-color:var(--border2);color:var(--text)}
+.btn-secondary svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* VIEWS */
+.view{display:none;flex:1}.view.active{display:flex;flex-direction:column}
+
+/* LISTA */
+.page-wrap{padding:28px;max-width:900px;margin:0 auto;width:100%}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.stat-card .s-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1}
+.stat-card .s-lbl{font-size:12px;color:var(--text3);margin-top:5px}
+.stat-card .s-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.si-blue{background:var(--accent-light)}.si-green{background:var(--green-bg)}.si-amber{background:var(--amber-bg)}.si-purple{background:var(--purple-bg)}
+.stat-card .s-icon svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.si-blue svg{stroke:var(--accent)}.si-green svg{stroke:var(--green)}.si-amber svg{stroke:var(--amber)}.si-purple svg{stroke:var(--purple)}
+
+.table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px}
+.table-header h2{font-size:15px;font-weight:600;color:var(--text)}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:7px 12px;flex:1;max-width:260px}
+.search-wrap svg{width:13px;height:13px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.search-wrap input{background:none;border:none;outline:none;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;width:100%}
+.search-wrap input::placeholder{color:var(--text3)}
+
+.table-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.table-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 80px;padding:10px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
+.table-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 80px;padding:13px 18px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:.12s}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:var(--surface)}
+.tr-name{font-size:14px;font-weight:500;color:var(--text)}
+.tr-cpf{font-size:13px;color:var(--text2);font-variant-numeric:tabular-nums}
+.tr-date{font-size:12px;color:var(--text3)}
+.tr-action{display:flex;justify-content:flex-end}
+.tr-action svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.empty-row{padding:50px 20px;text-align:center}
+.empty-row svg{width:36px;height:36px;stroke:var(--border2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 12px}
+.empty-row p{font-size:13px;color:var(--text3)}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.p-blue{background:var(--accent-light);color:var(--accent)}
+.p-green{background:var(--green-bg);color:var(--green)}
+.p-amber{background:var(--amber-bg);color:var(--amber)}
+.p-red{background:var(--red-bg);color:var(--red)}
+.p-gray{background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+.p-purple{background:var(--purple-bg);color:var(--purple)}
+
+/* MODAL CONFIG */
+.modal-overlay{position:fixed;inset:0;background:#00000055;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:var(--white);border-radius:var(--r3);padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px #00000020}
+.modal-box h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.modal-box p{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:18px}
+.steps-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:18px}
+.steps-box ol{padding-left:16px}
+.steps-box li{font-size:13px;color:var(--text2);line-height:1.9;padding-left:4px}
+.steps-box li strong{color:var(--text)}
+.steps-box a{color:var(--accent);text-decoration:none;font-weight:500}
+.steps-box a:hover{text-decoration:underline}
+.steps-box code{background:var(--accent-light);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px;font-family:monospace}
+.modal-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.modal-field input{width:100%;padding:10px 12px;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:.1s}
+.modal-field input:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+.config-status{font-size:12px;margin-top:10px;color:var(--text3)}
+
+/* FORM */
+.form-page{padding:28px;max-width:720px;margin:0 auto;width:100%}
+.form-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text3);margin-bottom:20px}
+.form-breadcrumb button{background:none;border:none;cursor:pointer;color:var(--text3);font-family:'Inter',sans-serif;font-size:13px;transition:.1s;display:flex;align-items:center;gap:4px}
+.form-breadcrumb button:hover{color:var(--accent)}
+.form-breadcrumb button svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.form-breadcrumb span{color:var(--border2)}
+.form-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:6px}
+.form-subtitle{font-size:13px;color:var(--text2);margin-bottom:24px}
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden}
+.form-card-head{padding:13px 18px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.form-card-head svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.form-card-body{padding:18px}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:.12s}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #1B3A5C18}
+.field select{cursor:pointer}.field select option{background:var(--white)}
+.field textarea{min-height:100px;resize:vertical;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:540px){.row2,.row3{grid-template-columns:1fr}}
+.alert-box{padding:11px 14px;border-radius:var(--r2);font-size:13px;display:flex;align-items:flex-start;gap:8px;margin-bottom:14px;line-height:1.5}
+.alert-box svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alert-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.alert-amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+.upload-area{border:1.5px dashed var(--border2);border-radius:var(--r);padding:22px;text-align:center;cursor:pointer;transition:.15s;background:var(--surface)}
+.upload-area:hover{border-color:var(--accent);background:var(--accent-light)}
+.upload-area svg{width:24px;height:24px;stroke:var(--text3);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px}
+.upload-area p{font-size:13px;color:var(--text2);font-weight:500}.upload-area small{font-size:11px;color:var(--text3)}
+.doc-files{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.doc-file{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);font-size:12px;color:var(--text2)}
+.doc-file svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.doc-file-remove{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center;transition:.1s;padding:2px}
+.doc-file-remove:hover{color:var(--red)}
+.doc-file-remove svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.checklist-table{width:100%;border-collapse:collapse;font-size:13px}
+.checklist-table tr{border-bottom:1px solid var(--border)}
+.checklist-table tr:last-child{border-bottom:none}
+.checklist-table td{padding:9px 0}
+.ck-status{width:20px}
+.ck-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.ck-ok{background:var(--green)}.ck-miss{background:var(--red)}.ck-opt{background:var(--amber)}
+.ck-label{color:var(--text2)}
+.ck-tag{text-align:right;font-size:11px;color:var(--text3)}
+.form-actions{display:flex;gap:10px;padding:20px 0}
+
+/* DETALHE */
+.detail-layout{display:flex;flex-direction:column;flex:1}
+.detail-header{background:var(--white);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:14px}
+.detail-back{background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center;gap:5px;font-size:13px;font-family:'Inter',sans-serif;transition:.1s;padding:4px 0}
+.detail-back:hover{color:var(--accent)}
+.detail-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.detail-info{flex:1;min-width:0}
+.detail-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.detail-pills{display:flex;gap:6px;flex-shrink:0}
+.detail-tabs{display:flex;background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;overflow-x:auto}
+.dtab{padding:12px 16px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:.12s}
+.dtab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
+.dtab:hover:not(.active){color:var(--text2)}
+.dtab svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tab-pane{display:none;flex:1;overflow-y:auto;padding:24px 28px}
+.tab-pane.active{display:block}
+.tab-body{max-width:720px;margin:0 auto}
+
+/* ANÁLISE CARDS */
+.acard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden}
+.acard-head{padding:12px 18px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.acard-head svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.acard-body{padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.75;white-space:pre-wrap}
+.prob-display{display:flex;align-items:center;gap:14px}
+.prob-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:700}
+.prob-pct{font-size:12px;color:var(--text3)}
+.prob-track{height:6px;background:var(--border);border-radius:3px;flex:1;overflow:hidden}
+.prob-fill{height:6px;border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.vuln-rows{padding:0 18px}
+.vuln-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.vuln-row:last-child{border-bottom:none}
+.vg{flex-shrink:0;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.02em;align-self:flex-start;margin-top:2px}
+.vg-c{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.vg-r{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.vg-b{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.vdesc{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.vsol{font-size:12px;color:var(--text2);line-height:1.6}
+.step-rows{padding:0 18px}
+.step-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.step-row:last-child{border-bottom:none}
+.snm{width:22px;height:22px;border-radius:50%;background:var(--accent-light);font-size:11px;font-weight:600;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+.sfase{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:3px}
+.sdesc{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* LOADING */
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px}
+.spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-state p{font-size:13px;color:var(--text2)}
+.empty-analysis{text-align:center;padding:50px 20px;background:var(--white);border:1px solid var(--border);border-radius:var(--r)}
+.empty-analysis svg{width:40px;height:40px;stroke:var(--border2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 14px}
+.empty-analysis h3{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.empty-analysis p{font-size:13px;color:var(--text3);margin-bottom:18px}
+
+/* XML */
+.xml-intro{background:var(--accent-light);border:1px solid #1B3A5C20;border-radius:var(--r);padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--accent);line-height:1.65}
+.xml-intro strong{font-weight:600}
+.xml-code{background:#1A1916;border-radius:var(--r);padding:16px 18px;font-size:12px;font-family:monospace;color:#A8D8A8;white-space:pre-wrap;overflow-x:auto;max-height:320px;overflow-y:auto;margin-bottom:12px;line-height:1.7;border:1px solid #333}
+.xml-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn-xml{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r2);font-size:12px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;transition:.15s;border:1px solid}
+.btn-xml svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn-copy{background:var(--accent-light);color:var(--accent);border-color:#1B3A5C30}
+.btn-copy:hover{background:#dde9f5}
+.btn-dl{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.btn-dl:hover{background:#dcfce7}
+
+/* WHATSAPP */
+.wa-card{background:#F0FDF4;border:1px solid var(--green-border);border-radius:var(--r);padding:16px 18px;font-size:13px;line-height:1.8;color:#166534;white-space:pre-wrap;margin-bottom:12px}
+.btn-wa{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);border-radius:var(--r2);font-size:12px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;transition:.15s}
+.btn-wa:hover{background:#dcfce7}
+.btn-wa svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* QUESITOS */
+.q-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.q-row{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start}
+.q-row:last-child{border-bottom:none}
+.q-n{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0;min-width:20px;padding-top:1px}
+.q-t{color:var(--text2);line-height:1.65}
+
+/* RESUMO CARD */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table tr{border-bottom:1px solid var(--border)}
+.data-table tr:last-child{border-bottom:none}
+.data-table td{padding:10px 18px}
+.data-table td:first-child{color:var(--text3);width:140px;font-size:12px;font-weight:500}
+.data-table td:last-child{color:var(--text)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .table-head,.table-row{grid-template-columns:1fr 1fr 80px}
+  .table-row>*:nth-child(3),.table-head>*:nth-child(3),.table-row>*:nth-child(4),.table-head>*:nth-child(4){display:none}
+  .page-wrap,.form-page,.tab-pane{padding:16px}
+  .detail-header{padding:12px 16px}
+  .detail-tabs{padding:0 16px}
+  .detail-pills{display:none}
+}
+
+/* ── LINHA DO TEMPO ── */
+.timeline{position:relative;padding:8px 0 8px 20px;margin:14px 0}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:3px;width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:var(--white);flex-shrink:0}
+.tl-dot.ok{background:var(--green);border-color:var(--green)}
+.tl-dot.warn{background:var(--amber);border-color:var(--amber)}
+.tl-dot.active{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px #1B3A5C20}
+.tl-dot.pend{background:var(--border2);border-color:var(--border2)}
+.tl-date{font-size:11px;color:var(--text3);margin-bottom:2px;font-weight:500}
+.tl-label{font-size:13px;color:var(--text);font-weight:500}
+.tl-sub{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.5}
+.tl-tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;margin-top:4px}
+.tl-tag.green{background:var(--green-bg);color:var(--green)}
+.tl-tag.amber{background:var(--amber-bg);color:var(--amber)}
+.tl-tag.blue{background:var(--accent-light);color:var(--accent)}
+.tl-tag.red{background:var(--red-bg);color:var(--red)}
+
+/* ── CARDS ESTRATÉGICOS ── */
+.stat-card.alert-card{border-color:#ef444430;background:linear-gradient(135deg,#FEF2F2,#fff)}
+.stat-card.warn-card{border-color:#f59e0b30;background:linear-gradient(135deg,#FFFBEB,#fff)}
+.sc-trend{font-size:11px;margin-top:6px;display:flex;align-items:center;gap:4px}
+.sc-trend svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc-trend.up{color:var(--green)}.sc-trend.warn{color:var(--amber)}.sc-trend.alert{color:var(--red)}
+
+/* ── FILTROS ── */
+.filters-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filter-sel{padding:6px 10px;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);font-size:12px;font-family:'Inter',sans-serif;color:var(--text2);cursor:pointer;outline:none;transition:.12s}
+.filter-sel:focus{border-color:var(--accent)}
+.filter-btn{padding:5px 12px;background:transparent;border:1px solid var(--border);border-radius:20px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text2);cursor:pointer;transition:.12s;white-space:nowrap}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.filter-btn:hover:not(.active){background:var(--surface);color:var(--text)}
+.results-count{font-size:12px;color:var(--text3);margin-left:auto}
+
+/* ── PRAZOS ── */
+.prazo-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.prazo-item:last-child{border-bottom:none}
+.prazo-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;flex-shrink:0}
+.prazo-badge.critico{background:var(--red-bg);color:var(--red)}
+.prazo-badge.urgente{background:var(--amber-bg);color:var(--amber)}
+.prazo-badge.ok{background:var(--green-bg);color:var(--green)}
+.prazo-nome{flex:1;font-weight:500;color:var(--text)}
+.prazo-data{font-size:11px;color:var(--text3)}
+.prazo-dias{font-size:11px;font-weight:600}
+.prazo-dias.critico{color:var(--red)}
+.prazo-dias.urgente{color:var(--amber)}
+
+/* ── ROADMAP ── */
+.roadmap-section{margin-bottom:20px}
+.roadmap-phase{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.roadmap-phase-head{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.roadmap-phase-head:hover{background:var(--surface)}
+.rph-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.rph-done{background:var(--green-bg);color:var(--green)}
+.rph-next{background:var(--accent-light);color:var(--accent)}
+.rph-future{background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+.rph-title{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.rph-toggle{width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:.2s;flex-shrink:0}
+.roadmap-phase-body{padding:14px 16px;border-top:1px solid var(--border);display:none}
+.roadmap-phase-body.open{display:block}
+.rm-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.rm-item:last-child{border-bottom:none}
+.rm-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.rm-icon svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.rm-done-ic{background:var(--green-bg);color:var(--green)}
+.rm-next-ic{background:var(--accent-light);color:var(--accent)}
+.rm-future-ic{background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+.rm-text{color:var(--text2);line-height:1.55;flex:1}
+.rm-text strong{color:var(--text)}
+.rm-dep{font-size:11px;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:4px}
+.rm-dep svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── HISTÓRICO DE AÇÕES ── */
+.log-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.log-date{font-size:11px;color:var(--text3);white-space:nowrap;min-width:80px}
+.log-text{color:var(--text2);line-height:1.55;flex:1}
+.log-text strong{color:var(--text)}
+
+/* ── PRAZO INPUT ── */
+.prazo-field{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.prazo-field .field{margin-bottom:0;flex:1;min-width:140px}
+.btn-add-prazo{padding:9px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
+.btn-add-prazo:hover{background:var(--accent-hover)}
+.btn-add-prazo svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+</style>
+<script>
+(function(){
+if(sessionStorage.getItem("cg_auth")!=="3e4469c3811791f8b127347bea8114eba320fa72de1203fe7b60bc89bfdf5dbb"){window.location.href="index.html";}
+})();
+</script>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="sidebar-logo-name">Costa Galvão</div>
+      <div class="sidebar-logo-sub">Auxílio-Acidente Analytics</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Menu</div>
+      <button class="nav-item active" id="nav_lista" onclick="showView('lista')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Todos os casos
+      </button>
+      <button class="nav-item" id="nav_novo" onclick="showView('form')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo caso
+      </button>
+      <div class="nav-section">Fases</div>
+      <button class="nav-item" onclick="filtrarFase('fase1_adm')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Administrativo
+      </button>
+      <button class="nav-item" id="nav_prazos" onclick="showPainelPrazos()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Prazos urgentes
+      </button>
+      <button class="nav-item" id="nav_roadmap" onclick="showRoadmap()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+        Roadmap
+      </button>
+      <button class="nav-item" onclick="filtrarFase('fase3_judicial')">
+        <svg viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6z"/></svg>
+        Judicial
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="config-btn" onclick="abrirConfig()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configurações
+        <div class="conn-dot off" id="connDot"></div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- MODAL CONFIG -->
+    <div id="modalCfg" class="modal-overlay" style="display:none">
+      <div class="modal-box">
+        <h3>Configurar banco de dados</h3>
+        <p>Conecte ao Google Sheets para salvar e acessar seus casos de qualquer dispositivo.</p>
+        <div class="steps-box">
+          <ol>
+            <li>Abra <a href="https://sheets.google.com" target="_blank"><strong>sheets.google.com</strong></a> e crie uma planilha chamada <code>AA Analytics</code></li>
+            <li>Menu <strong>Extensões → Apps Script</strong> — apague o código existente e cole o arquivo <code>codigo_apps_script.txt</code></li>
+            <li>Salve e clique em <strong>Implantar → Nova implantação</strong></li>
+            <li>Tipo: <strong>App da Web</strong> · Acesso: <strong>Qualquer pessoa</strong> → Implantar</li>
+            <li>Autorize o acesso e copie a <strong>URL gerada</strong></li>
+          </ol>
+        </div>
+        <div class="modal-field">
+          <label>URL da implantação</label>
+          <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="salvarConfig()">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar e testar
+          </button>
+          <button class="btn-secondary" onclick="fecharConfig()">Fechar</button>
+        </div>
+        <p class="config-status" id="cfgStatus"></p>
+      </div>
+    </div>
+
+    <!-- LISTA -->
+    <div id="viewLista" class="view active">
+      <div class="topbar">
+        <div class="topbar-title">Casos</div>
+        <div class="topbar-actions">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="searchInput" placeholder="Nome ou CPF..." oninput="renderList()">
+          </div>
+          <button class="btn-primary" onclick="showView('form')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo caso
+          </button>
+        </div>
+      </div>
+      <div class="page-wrap">
+        <div class="stats-grid" id="statsGrid"></div>
+      <div class="filters-row" id="filtersRow"></div>
+        <div class="table-header">
+          <h2 id="tableTitle">Todos os casos</h2>
+          <button class="btn-secondary" id="btnLimparFiltro" style="display:none" onclick="limparFiltro()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Limpar filtro
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <div>Cliente</div><div>CPF</div><div>Fase</div><div>Probabilidade</div><div></div>
+          </div>
+          <div id="caseList">
+            <div class="empty-row">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p>Nenhum caso cadastrado. Clique em "Novo caso" para começar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div id="viewForm" class="view">
+      <div class="topbar">
+        <div class="topbar-title">Novo caso</div>
+      </div>
+      <div class="form-page">
+        <div class="form-breadcrumb">
+          <button onclick="showView('lista')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Casos</button>
+          <span>/</span><span style="color:var(--text2)">Novo caso</span>
+        </div>
+        <div class="form-title">Cadastrar novo caso</div>
+        <div class="form-subtitle">Preencha os dados do cliente e anexe os documentos disponíveis</div>
+
+        <div class="form-card">
+          <div class="form-card-head"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Dados pessoais</div>
+          <div class="form-card-body">
+            <div class="row2">
+              <div class="field"><label>Nome completo *</label><input id="f_nome" placeholder="Ex.: João Silva Oliveira"></div>
+              <div class="field"><label>CPF *</label><input id="f_cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+            </div>
+            <div class="row3">
+              <div class="field"><label>RG</label><input id="f_rg" placeholder="00.000.000"></div>
+              <div class="field"><label>Data de nascimento</label><input id="f_nasc" type="date"></div>
+              <div class="field"><label>Telefone</label><input id="f_tel" placeholder="(00) 9.0000-0000"></div>
+            </div>
+            <div class="row2">
+              <div class="field"><label>Profissão / atividade habitual *</label><input id="f_prof" placeholder="Ex.: Eletricista de instalações"></div>
+              <div class="field"><label>Endereço completo</label><input id="f_end" placeholder="Rua, nº, bairro, cidade, CEP"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-card-head"><svg viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6z"/></svg> Vínculo previdenciário</div>
+          <div class="form-card-body">
+            <div class="field">
+              <label>Tipo de segurado *</label>
+              <select id="f_vinculo" onchange="checkVinculo()">
+                <option value="">Selecione...</option>
+                <option value="empregado">Empregado (CLT)</option>
+                <option value="avulso">Trabalhador avulso</option>
+                <option value="especial">Segurado especial / Rural</option>
+                <option value="individual">Contribuinte individual / Autônomo</option>
+                <option value="facultativo">Segurado facultativo</option>
+              </select>
+            </div>
+            <div id="alertaVinculo" class="alert-box alert-red" style="display:none">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span>Contribuintes individuais e segurados facultativos <strong>não têm direito ao Auxílio-Acidente</strong> (Art. 18, §1º, Lei 8.213/91). A viabilidade será classificada como Nula.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-card-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Acidente e benefícios</div>
+          <div class="form-card-body">
+            <div class="row2">
+              <div class="field"><label>Tipo de acidente</label>
+                <select id="f_tpAcidente">
+                  <option value="trabalho_tipico">Acidente de trabalho típico</option>
+                  <option value="trajeto">Acidente de trajeto</option>
+                  <option value="qualquer_natureza">Acidente de qualquer natureza</option>
+                  <option value="doenca_ocupacional">Doença ocupacional</option>
+                </select>
+              </div>
+              <div class="field"><label>Data do acidente</label><input id="f_dtAcidente" type="date"></div>
+            </div>
+            <div class="row3">
+              <div class="field"><label>NB(s) anteriores</label><input id="f_nb" placeholder="000.000.000-0"></div>
+              <div class="field"><label>DIB — início do benefício</label><input id="f_dib" type="date"></div>
+              <div class="field"><label>DCB — data de cessação *</label><input id="f_dcb" type="date"></div>
+            </div>
+            <div class="field"><label>Fase processual atual</label>
+              <select id="f_fase">
+                <option value="fase1_adm">Fase 1 — Requerimento administrativo (INSS)</option>
+                <option value="fase2_ms">Fase 2 — Mandado de segurança / recurso</option>
+                <option value="fase3_judicial">Fase 3 — Ação judicial de concessão</option>
+                <option value="fase4_dib">Fase 4 — Revisão / retroação da DIB</option>
+              </select>
+            </div>
+            <div class="field"><label>Relato completo do caso *</label>
+              <textarea id="f_relato" placeholder="Descreva o acidente, as lesões sofridas, os tratamentos realizados, as sequelas permanentes e as limitações atuais para o exercício do trabalho habitual..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-card-head"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg> Documentos</div>
+          <div class="form-card-body">
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Clique para selecionar arquivos</p>
+              <small>PDF, JPG, PNG · múltiplos arquivos aceitos</small>
+            </div>
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleFiles(event)">
+            <div id="docList" class="doc-files"></div>
+            <div style="margin-top:16px">
+              <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">Checklist de documentos</div>
+              <table class="checklist-table">
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_rg"></span></td><td class="ck-label">RG e CPF</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_end"></span></td><td class="ck-label">Comprovante de residência</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_cnis"></span></td><td class="ck-label">CNIS — extrato previdenciário</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_ctps"></span></td><td class="ck-label">CTPS — carteira de trabalho</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_laudo"></span></td><td class="ck-label">Laudo / relatório médico atual</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-miss" id="ck_exame"></span></td><td class="ck-label">Exames de imagem</td><td class="ck-tag">obrigatório</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-opt" id="ck_cat"></span></td><td class="ck-label">CAT — Comunicação de Acidente de Trabalho</td><td class="ck-tag">se acidente trabalho</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-opt" id="ck_sabi"></span></td><td class="ck-label">Laudo INSS / SABI do benefício anterior</td><td class="ck-tag">recomendado</td></tr>
+                <tr><td class="ck-status"><span class="ck-dot ck-opt" id="ck_aso"></span></td><td class="ck-label">ASO de retorno / restrição funcional</td><td class="ck-tag">se disponível</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" id="btnSalvar" onclick="salvarCaso()">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Salvar caso
+          </button>
+          <button class="btn-secondary" onclick="showView('lista')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETALHE -->
+    <div id="viewDetalhe" class="view">
+      <div class="detail-layout">
+        <div class="detail-header">
+          <button class="detail-back" onclick="showView('lista')">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Casos
+          </button>
+          <div class="detail-info">
+            <div class="detail-name" id="dhName">—</div>
+            <div class="detail-meta" id="dhMeta">—</div>
+          </div>
+          <div class="detail-pills" id="dhPills"></div>
+        </div>
+        <div class="detail-tabs">
+          <button class="dtab active" id="tab_resumo" onclick="switchTab('resumo')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Resumo
+          </button>
+          <button class="dtab" id="tab_analise" onclick="switchTab('analise')">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Análise estratégica
+          </button>
+          <button class="dtab" id="tab_xml" onclick="switchTab('xml')">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Exportar XML
+          </button>
+          <button class="dtab" id="tab_whats" onclick="switchTab('whats')">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> WhatsApp
+          </button>
+          <button class="dtab" id="tab_timeline" onclick="switchTab('timeline')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Timeline
+      </button>
+      <button class="dtab" id="tab_prazos_case" onclick="switchTab('prazos_case')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Prazos
+      </button>
+      <button class="dtab" id="tab_logs" onclick="switchTab('logs')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg> Histórico
+      </button>
+      <button class="dtab" id="tab_quesitos" onclick="switchTab('quesitos')">
+            <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Quesitos
+          </button>
+        </div>
+        <div id="tc_resumo" class="tab-pane active"><div class="tab-body" id="resumo_content"></div></div>
+        <div id="tc_analise" class="tab-pane">
+          <div class="tab-body">
+            <div id="analise_loading" class="loading-state" style="display:none"><div class="spinner"></div><p id="loadMsg">Gerando análise estratégica...</p></div>
+            <div id="analise_content"></div>
+            <div id="analise_empty" class="empty-analysis">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <h3>Análise não gerada</h3>
+              <p>Clique abaixo para gerar a análise estratégica completa deste caso</p>
+              <button class="btn-primary" onclick="gerarAnalise()">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Gerar análise estratégica
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="tc_xml" class="tab-pane"><div class="tab-body"><div id="xml_content"></div></div></div>
+        <div id="tc_whats" class="tab-pane"><div class="tab-body" id="whats_content"><p style="font-size:13px;color:var(--text3);padding:20px 0">Gere a análise primeiro para obter a mensagem de WhatsApp.</p></div></div>
+        <div id="tc_quesitos" class="tab-pane"><div class="tab-body" id="quesitos_content"><p style="font-size:13px;color:var(--text3);padding:20px 0">Gere a análise primeiro para obter os quesitos periciais.</p></div></div>
+      </div>
+    </div>
+
+  <div id="viewPrazos" class="view">
+    <div class="topbar">
+      <div class="topbar-title">Prazos urgentes</div>
+    </div>
+    <div class="page-wrap">
+      <div class="acard">
+        <div class="acard-head">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Todos os prazos cadastrados
+        </div>
+        <div class="acard-body" style="padding:6px 18px" id="painel_prazos">
+          <p style="font-size:13px;color:var(--text3)">Nenhum prazo cadastrado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="viewRoadmap" class="view">
+    <div class="topbar">
+      <div class="topbar-title">Roadmap do sistema</div>
+    </div>
+    <div class="page-wrap">
+      <div style="margin-bottom:16px">
+        <p style="font-size:13px;color:var(--text2);line-height:1.65">Acompanhe o que já está disponível, o que está em planejamento e o que depende de recursos adicionais para ser implementado.</p>
+      </div>
+      <div id="roadmap_content"></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+const SYSTEM=`Você é o Auxílio-Acidente Analytics, assistente jurídico do escritório Costa Galvão Advocacia, especializado em Auxílio-Acidente (Art. 86, Lei 8.213/91). Escritório: Dra. Jucineide dos Santos Costa — OAB/PE 38.575, Rua Dr. José Mariano, 345, Centro, Garanhuns/PE, CEP 55.295-335. Tel: (87) 9.9809-4537 / (87) 9.9944-0544.
+BASE LEGAL: Art. 86 Lei 8.213/91; §2º: DIB = dia seguinte à DCB (Tema 862 STJ); Tema 416 STJ: nível do dano não interfere; Art. 18 §1º: individual/facultativo sem direito; Decreto 3.048/99 Anexo III; IN 128/2022 arts. 352-355; Súmula 501 STF: competência Justiça Estadual.
+REGRAS: 1) Sem CNIS+Laudo → Nula. 2) Individual/facultativo → Nula. 3) Sem SABI → Média com [AJUSTAR EM JUÍZO]. 4) Menor 18 → alertar representante legal.`;
+
+let casos=[];let ativo=null;let arquivos=[];let scriptURL='';let filtroFase='';
+
+function loadStorage(){
+  try{scriptURL=localStorage.getItem('aa_analytics_url')||'';casos=JSON.parse(localStorage.getItem('aa_analytics_casos')||'[]');}catch(e){}
+  atualizarConnDot();
+}
+function saveLocal(){try{localStorage.setItem('aa_analytics_casos',JSON.stringify(casos));if(scriptURL)localStorage.setItem('aa_analytics_url',scriptURL);}catch(e){}}
+function atualizarConnDot(){const d=document.getElementById('connDot');if(d)d.className='conn-dot'+(scriptURL?'':' off');}
+
+function abrirConfig(){document.getElementById('cfgUrl').value=scriptURL||'';document.getElementById('modalCfg').style.display='flex';}
+function fecharConfig(){document.getElementById('modalCfg').style.display='none';}
+async function salvarConfig(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  if(!url){alert('Cole a URL do Apps Script.');return;}
+  document.getElementById('cfgStatus').textContent='Testando conexão...';
+  try{
+    const res=await fetch(url+'?acao=listarCasos');
+    const data=await res.json();
+    if(data.casos!==undefined){
+      scriptURL=url;localStorage.setItem('aa_analytics_url',url);
+      document.getElementById('cfgStatus').textContent='✅ Conectado com sucesso!';
+      atualizarConnDot();
+      if(data.casos.length){casos=data.casos;saveLocal();renderList();}
+      setTimeout(fecharConfig,1500);
+    }else{document.getElementById('cfgStatus').textContent='⚠️ Resposta inesperada. Verifique a URL.';}
+  }catch(e){document.getElementById('cfgStatus').textContent='❌ Erro: '+e.message;}
+}
+
+function maskCPF(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d+)/,'$1.$2.$3');else if(v.length>3)v=v.replace(/(\d{3})(\d+)/,'$1.$2');el.value=v;}
+function checkVinculo(){const v=document.getElementById('f_vinculo').value;document.getElementById('alertaVinculo').style.display=(v==='individual'||v==='facultativo')?'flex':'none';}
+
+
+function showPainelPrazos(){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('viewPrazos').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav_prazos').classList.add('active');
+  renderPainelPrazos();
+}
+function showRoadmap(){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('viewRoadmap').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav_roadmap').classList.add('active');
+  document.getElementById('roadmap_content').innerHTML=renderRoadmap();
+}
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view'+({lista:'Lista',form:'Form',detalhe:'Detalhe'}[v])).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  if(v==='lista'){document.getElementById('nav_lista').classList.add('active');renderList();}
+  if(v==='form'){document.getElementById('nav_novo').classList.add('active');resetForm();}
+}
+function switchTab(t){
+  document.querySelectorAll('.dtab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab_'+t).classList.add('active');
+  document.getElementById('tc_'+t).classList.add('active');
+  if(t==='xml'&&ativo)renderXML();
+  if(t==='timeline'&&ativo)document.getElementById('timeline_content').innerHTML=renderTimeline(ativo);
+  if(t==='prazos_case'&&ativo)document.getElementById('prazos_content').innerHTML=renderPrazosCase(ativo);
+  if(t==='logs'&&ativo)document.getElementById('logs_content').innerHTML=renderLogs(ativo);
+}
+
+function faseLabel(f){const m={fase1_adm:'Fase 1 — Adm.',fase2_ms:'Fase 2 — MS',fase3_judicial:'Fase 3 — Judicial',fase4_dib:'Fase 4 — DIB'};return`<span class="pill p-blue">${m[f]||f}</span>`;}
+function probPill(p){if(!p)return'<span class="pill p-gray">—</span>';if(/alta/i.test(p))return`<span class="pill p-green">${p}</span>`;if(/m[eé]dia/i.test(p))return`<span class="pill p-amber">${p}</span>`;if(/nula/i.test(p)||/baixa/i.test(p))return`<span class="pill p-red">${p}</span>`;return`<span class="pill p-gray">${p}</span>`;}
+
+function filtrarFase(f){filtroFase=f;showView('lista');}
+function limparFiltro(){filtroFase='';document.getElementById('btnLimparFiltro').style.display='none';document.getElementById('tableTitle').textContent='Todos os casos';renderList();}
+
+function renderList(){
+  const q=(document.getElementById('searchInput')||{}).value||'';
+  renderFilters();
+  const sorted=[...casos].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  let lista=sorted;
+  // filtro fase dropdown
+  const ffAdv=(document.getElementById('filtroFaseAdv')||{}).value||'';
+  if(ffAdv) lista=lista.filter(c=>c.fase===ffAdv);
+  // filtro status
+  const fStatus=(document.getElementById('filtroStatus')||{}).value||'';
+  if(fStatus==='sem_analise') lista=lista.filter(c=>!c.analise);
+  else if(fStatus==='alta') lista=lista.filter(c=>c.analise&&/alta/i.test(c.analise.probabilidade||''));
+  else if(fStatus==='media') lista=lista.filter(c=>c.analise&&/m[eé]dia/i.test(c.analise.probabilidade||''));
+  else if(fStatus==='baixa') lista=lista.filter(c=>c.analise&&(/baixa/i.test(c.analise.probabilidade||'')||/nula/i.test(c.analise.probabilidade||'')));
+  else if(fStatus==='pend_docs') lista=lista.filter(c=>{const docs=(c.docs||[]).map(d=>d.toLowerCase());return !docs.some(d=>d.includes('cnis')||d.includes('extrato'))||!docs.some(d=>d.includes('laudo')||d.includes('relatorio')||d.includes('medico'));});
+  if(filtroFase){lista=lista.filter(c=>c.fase===filtroFase);document.getElementById('tableTitle').textContent=faseLabel(filtroFase).replace(/<[^>]+>/g,'');document.getElementById('btnLimparFiltro').style.display='flex';}
+  else{document.getElementById('tableTitle').textContent='Todos os casos';}
+  if(q)lista=lista.filter(c=>(c.nome||'').toLowerCase().includes(q.toLowerCase())||(c.cpf||'').includes(q));
+  renderStats(sorted); // nova função acima
+  const el=document.getElementById('caseList');
+  if(!lista.length){el.innerHTML='<div class="empty-row"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Nenhum caso encontrado.</p></div>';return;}
+  el.innerHTML=lista.map(c=>`
+    <div class="table-row" onclick="abrirCaso('${c.id}')">
+      <div>
+        <div class="tr-name">${c.nome||'—'}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">${c.prof||c.profissao||'—'}</div>
+      </div>
+      <div class="tr-cpf">${c.cpf||'—'}</div>
+      <div>${faseLabel(c.fase)}</div>
+      <div>${c.analise?probPill(c.analise.probabilidade||c.probabilidade):'<span class="pill p-gray">Sem análise</span>'}</div>
+      <div class="tr-action"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>`).join('');
+}
+
+function renderStats_OLD(casos_OLD){
+  const el=document.getElementById('statsGrid');
+  const total=casos.length;
+  const alta=casos.filter(c=>c.analise&&/alta/i.test(c.analise.probabilidade||'')).length;
+  const f1=casos.filter(c=>c.fase==='fase1_adm').length;
+  const fj=casos.filter(c=>c.fase==='fase3_judicial'||c.fase==='fase4_dib').length;
+  el.innerHTML=[
+    {icon:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',cls:'si-blue',val:total,lbl:'Total de casos'},
+    {icon:'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',cls:'si-green',val:alta,lbl:'Prob. alta'},
+    {icon:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>',cls:'si-amber',val:f1,lbl:'Fase administrativa'},
+    {icon:'<svg viewBox="0 0 24 24"><path d="M3 6l9-4 9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6z"/></svg>',cls:'si-purple',val:fj,lbl:'Fase judicial'},
+  ].map(s=>`<div class="stat-card"><div class="s-icon ${s.cls}">${s.icon}</div><div class="s-val">${s.val}</div><div class="s-lbl">${s.lbl}</div></div>`).join('');
+}
+
+function resetForm(){
+  ['f_nome','f_cpf','f_rg','f_tel','f_prof','f_end','f_nb','f_relato'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f_nasc','f_dib','f_dcb','f_dtAcidente'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f_vinculo').value='';document.getElementById('f_fase').value='fase1_adm';document.getElementById('f_tpAcidente').value='trabalho_tipico';
+  document.getElementById('alertaVinculo').style.display='none';arquivos=[];document.getElementById('docList').innerHTML='';
+  ['ck_rg','ck_end','ck_cnis','ck_ctps','ck_laudo','ck_exame','ck_cat','ck_sabi','ck_aso'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='ck-dot '+(['ck_cat','ck_sabi','ck_aso'].includes(id)?'ck-opt':'ck-miss');});
+}
+
+function handleFiles(e){Array.from(e.target.files).forEach(f=>{if(!arquivos.find(x=>x.name===f.name)){arquivos.push(f);ckUpdate(f.name);}});renderDocList();e.target.value='';}
+function renderDocList(){document.getElementById('docList').innerHTML=arquivos.map(f=>`<div class="doc-file"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>${f.name}</span><span style="font-size:11px;color:var(--text3);margin-left:4px">${(f.size/1024).toFixed(0)}kb</span><button class="doc-file-remove" onclick="removeFile('${f.name}')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('');}
+function removeFile(n){arquivos=arquivos.filter(f=>f.name!==n);renderDocList();}
+const CK={ck_rg:['rg','cpf','identidade','cnh','cin'],ck_end:['comprovante','residencia','enderec'],ck_cnis:['cnis','extrato','previdenci'],ck_ctps:['ctps','carteira','trabalho'],ck_laudo:['laudo','relatorio','medico','prontuario','atestado','declarac'],ck_exame:['tomografi','ressonanci','radiografi','rx','imagem','eletro'],ck_cat:['cat','comunicac','acidente'],ck_sabi:['sabi','pericia','beneficio'],ck_aso:['aso','ocupacional','retorno']};
+function ckUpdate(n){const s=n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');Object.entries(CK).forEach(([id,terms])=>{if(terms.some(t=>s.includes(t))){const el=document.getElementById(id);if(el)el.className='ck-dot ck-ok';}});}
+
+async function salvarCaso(){
+  const nome=document.getElementById('f_nome').value.trim();const relato=document.getElementById('f_relato').value.trim();const prof=document.getElementById('f_prof').value.trim();
+  if(!nome||!relato||!prof){alert('Preencha: Nome, Profissão e Relato.');return;}
+  const btn=document.getElementById('btnSalvar');btn.disabled=true;btn.textContent='Salvando...';
+  const id='caso_'+Date.now();
+  const caso={id,nome,cpf:document.getElementById('f_cpf').value.trim(),rg:document.getElementById('f_rg').value.trim(),nasc:document.getElementById('f_nasc').value,tel:document.getElementById('f_tel').value.trim(),prof,end:document.getElementById('f_end').value.trim(),vinculo:document.getElementById('f_vinculo').value,fase:document.getElementById('f_fase').value,tpAcidente:document.getElementById('f_tpAcidente').value,dtAcidente:document.getElementById('f_dtAcidente').value,nb:document.getElementById('f_nb').value.trim(),dib:document.getElementById('f_dib').value,dcb:document.getElementById('f_dcb').value,relato,docs:arquivos.map(f=>f.name),createdAt:new Date().toISOString(),analise:null};
+  addLog(caso,'Caso cadastrado no sistema.');casos.unshift(caso);saveLocal();
+  if(scriptURL){try{await fetch(scriptURL,{method:'POST',body:JSON.stringify({acao:'salvarCaso',caso})});}catch(e){}}
+  btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar caso';
+  abrirCaso(id);
+}
+
+function abrirCaso(id){
+  const c=casos.find(x=>x.id===id);if(!c)return;ativo=c;
+  document.getElementById('dhName').textContent=c.nome;
+  document.getElementById('dhMeta').textContent=`CPF: ${c.cpf||'—'} · ${c.prof||c.profissao||'—'} · Cadastrado em ${new Date(c.createdAt).toLocaleDateString('pt-BR')}`;
+  document.getElementById('dhPills').innerHTML=faseLabel(c.fase)+(c.analise?probPill(c.analise.probabilidade||c.probabilidade):'');
+  showView('detalhe');switchTab('resumo');renderResumo(c);
+  if(c.analise){document.getElementById('analise_empty').style.display='none';renderAnalise(c.analise);renderWhats(c.analise.whatsapp);renderQuesitos(c.analise.quesitos);}
+  else{document.getElementById('analise_empty').style.display='block';document.getElementById('analise_content').innerHTML='';}
+}
+
+function renderResumo(c){
+  const campos=[['Nome completo',c.nome],['CPF',c.cpf],['RG',c.rg],['Data de nascimento',c.nasc],['Telefone',c.tel],['Profissão',c.prof||c.profissao],['Endereço',c.end],['Tipo de segurado',c.vinculo],['Tipo de acidente',c.tpAcidente],['Data do acidente',c.dtAcidente],['NB(s) anteriores',c.nb],['DIB',c.dib],['DCB',c.dcb]].filter(([,v])=>v);
+  const docs=c.docs||[];
+  document.getElementById('resumo_content').innerHTML=`
+    <div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Dados do cliente</div>
+    <table class="data-table">${campos.map(([l,v])=>`<tr><td>${l}</td><td>${v}</td></tr>`).join('')}</table></div>
+    <div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> Documentos (${docs.length})</div>
+    <div class="acard-body">${docs.length?docs.map(d=>`<div style="padding:3px 0;color:var(--text2)">· ${d}</div>`).join(''):'<span style="color:var(--text3)">Nenhum documento registrado</span>'}</div></div>
+    <div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Relato do caso</div>
+    <div class="acard-body">${(c.relato||'').replace(/</g,'&lt;')}</div></div>
+    <div style="margin-top:4px"><button class="btn-primary" onclick="switchTab('analise')">${c.analise?'Ver análise estratégica':'Gerar análise estratégica'}</button></div>`;
+}
+
+async function gerarAnalise(){
+  if(!ativo)return;
+  document.getElementById('analise_empty').style.display='none';
+  document.getElementById('analise_loading').style.display='flex';
+  const c=ativo;
+  const prompt=`CASO ID: ${c.id}\nNome: ${c.nome} | CPF: ${c.cpf||'n/i'} | Nasc: ${c.nasc||'n/i'} | Prof: ${c.prof||c.profissao} | End: ${c.end||'n/i'} | Vinculo: ${c.vinculo||'n/i'} | TipoAcidente: ${c.tpAcidente} | DataAcidente: ${c.dtAcidente||'n/i'} | NB: ${c.nb||'n/i'} | DIB: ${c.dib||'n/i'} | DCB: ${c.dcb||'n/i'} | Fase: ${c.fase}\nDocs: ${(c.docs||[]).join(', ')||'nenhum'}\nRelato: ${c.relato}\n\nResponda APENAS JSON puro:\n{"probabilidade":"Alta|Média|Baixa|Nula","diagnostico":"texto","vulnerabilidades":[{"descricao":"","grau":"Crítico|Relevante|Baixo","solucao":""}],"desenho_estrategico":[{"fase":"Fase X — título","descricao":""}],"whatsapp":"mensagem WhatsApp","quesitos":[{"num":1,"texto":""}]}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,system:SYSTEM,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const raw=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    let analise;try{analise=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch(e){analise={probabilidade:'—',diagnostico:raw,vulnerabilidades:[],desenho_estrategico:[],whatsapp:'',quesitos:[]};}
+    ativo.analise=analise;saveLocal();
+    if(scriptURL){try{await fetch(scriptURL,{method:'POST',body:JSON.stringify({acao:'salvarAnalise',id:ativo.id,analise})});}catch(e){}}
+    addLog(ativo,'Análise estratégica gerada — Probabilidade: '+analise.probabilidade+'.'); saveLocal();
+    document.getElementById('analise_loading').style.display='none';
+    renderAnalise(analise);renderWhats(analise.whatsapp);renderQuesitos(analise.quesitos);
+    document.getElementById('dhPills').innerHTML=faseLabel(ativo.fase)+probPill(analise.probabilidade);
+  }catch(err){document.getElementById('loadMsg').textContent='Erro: '+err.message;}
+}
+
+function renderAnalise(a){
+  const pct={Alta:85,Média:55,Baixa:30,Nula:0}[a.probabilidade]||0;
+  const cor=a.probabilidade==='Alta'?'var(--green)':a.probabilidade==='Média'?'var(--amber)':'var(--red)';
+  let html=`<div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Probabilidade de êxito</div>
+    <div class="acard-body"><div class="prob-display"><span class="prob-value" style="color:${cor}">${a.probabilidade||'—'}</span><span class="prob-pct">${pct}%</span><div class="prob-track"><div class="prob-fill" style="width:${pct}%;background:${cor}"></div></div></div></div></div>
+  <div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Diagnóstico jurídico</div><div class="acard-body">${(a.diagnostico||'').replace(/</g,'&lt;')}</div></div>`;
+  if(a.vulnerabilidades?.length)html+=`<div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Matriz de vulnerabilidade</div><div class="vuln-rows">${a.vulnerabilidades.map(v=>`<div class="vuln-row"><span class="vg ${v.grau==='Crítico'?'vg-c':v.grau==='Relevante'?'vg-r':'vg-b'}">${v.grau}</span><div><div class="vdesc">${(v.descricao||'').replace(/</g,'&lt;')}</div><div class="vsol">${(v.solucao||'').replace(/</g,'&lt;')}</div></div></div>`).join('')}</div></div>`;
+  if(a.desenho_estrategico?.length)html+=`<div class="acard"><div class="acard-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Desenho estratégico</div><div class="step-rows">${a.desenho_estrategico.map((s,i)=>`<div class="step-row"><div class="snm">${i+1}</div><div><div class="sfase">${(s.fase||'').replace(/</g,'&lt;')}</div><div class="sdesc">${(s.descricao||'').replace(/</g,'&lt;')}</div></div></div>`).join('')}</div></div>`;
+  document.getElementById('analise_content').innerHTML=html;
+}
+
+function gerarXMLString(){
+  if(!ativo)return'';const c=ativo;const a=c.analise||{};
+  const e=s=>(s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return`<CASOS_PARA_ANALISE>\n\n  <CASO id="${c.id}" cliente="${e(c.nome)}">\n\n    <DADOS_CLIENTE>\n      <Nome>${e(c.nome)}</Nome>\n      <CPF>${e(c.cpf)}</CPF>\n      <RG>${e(c.rg)}</RG>\n      <Nascimento>${e(c.nasc)}</Nascimento>\n      <Telefone>${e(c.tel)}</Telefone>\n      <Profissao>${e(c.prof||c.profissao)}</Profissao>\n      <Endereco>${e(c.end)}</Endereco>\n      <Vinculo>${e(c.vinculo)}</Vinculo>\n    </DADOS_CLIENTE>\n\n    <ACIDENTE_BENEFICIOS>\n      <TipoAcidente>${e(c.tpAcidente)}</TipoAcidente>\n      <DataAcidente>${e(c.dtAcidente)}</DataAcidente>\n      <NB>${e(c.nb)}</NB>\n      <DIB>${e(c.dib)}</DIB>\n      <DCB>${e(c.dcb)}</DCB>\n      <FaseProcessual>${e(c.fase)}</FaseProcessual>\n    </ACIDENTE_BENEFICIOS>\n\n    <RELATO>\n      ${e(c.relato)}\n    </RELATO>\n\n    <PROVAS_ANEXADAS>\n      ${(c.docs||[]).map(d=>`<Documento>${e(d)}</Documento>`).join('\n      ')||'<Documento>Nenhum</Documento>'}\n    </PROVAS_ANEXADAS>\n\n    <ANALISE_PREVIA>\n      <Probabilidade>${e(a.probabilidade)}</Probabilidade>\n      <Diagnostico>${e(a.diagnostico)}</Diagnostico>\n    </ANALISE_PREVIA>\n\n  </CASO>\n\n</CASOS_PARA_ANALISE>`;
+}
+function renderXML(){
+  const xml=gerarXMLString();
+  document.getElementById('xml_content').innerHTML=`
+    <div class="xml-intro"><strong>Como usar:</strong> Copie o XML abaixo e cole no chat do Claude para gerar os documentos Word com papel timbrado prontos para download.</div>
+    <div class="xml-code">${xml.replace(/</g,'&lt;')}</div>
+    <div class="xml-btns">
+      <button class="btn-xml btn-copy" onclick="copiarXML()"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar XML</button>
+      <button class="btn-xml btn-dl" onclick="downloadXML()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar XML</button>
+    </div>`;
+}
+function copiarXML(){const xml=gerarXMLString();if(navigator.clipboard){navigator.clipboard.writeText(xml).then(()=>alert('XML copiado! Cole no chat do Claude.'));}else{const ta=document.createElement('textarea');ta.value=xml;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('XML copiado!');}}
+function downloadXML(){const xml=gerarXMLString();const a=document.createElement('a');a.href='data:text/xml;charset=utf-8,'+encodeURIComponent(xml);a.download=`caso_${(ativo?.nome||'cliente').replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xml`;a.click();}
+
+function renderWhats(msg){document.getElementById('whats_content').innerHTML=`<div class="wa-card">${(msg||'Sem mensagem.').replace(/</g,'&lt;')}</div><button class="btn-wa" onclick="copiarTexto(\`${(msg||'').replace(/`/g,"'").replace(/\n/g,'\\n')}\`)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar mensagem</button>`;}
+function renderQuesitos(qs){const el=document.getElementById('quesitos_content');if(!qs?.length){el.innerHTML='<p style="font-size:13px;color:var(--text3);padding:20px 0">Quesitos não aplicáveis a este caso.</p>';return;}el.innerHTML=`<div class="q-card">${qs.map(q=>`<div class="q-row"><span class="q-n">${q.num}.</span><span class="q-t">${(q.texto||'').replace(/</g,'&lt;')}</span></div>`).join('')}</div>`;}
+function copiarTexto(t){const txt=t.replace(/\\n/g,'\n');if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>alert('Copiado!'));}else{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Copiado!');}}
+
+
+// ── LOGOUT ──────────────────────────────────────────────────────────
+function sair(){if(confirm('Deseja sair do sistema?')){sessionStorage.removeItem('cg_auth');window.location.href='index.html';}}
+
+// ── PRAZOS ──────────────────────────────────────────────────────────
+function diasRestantes(dataStr){
+  if(!dataStr) return null;
+  const d = new Date(dataStr); const hoje = new Date();
+  hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  return Math.ceil((d-hoje)/(1000*60*60*24));
+}
+function prazoClass(dias){
+  if(dias===null) return 'ok';
+  if(dias<=5) return 'critico';
+  if(dias<=15) return 'urgente';
+  return 'ok';
+}
+function prazoLabel(dias){
+  if(dias===null) return '';
+  if(dias<0) return 'Vencido';
+  if(dias===0) return 'Hoje!';
+  if(dias===1) return 'Amanhã';
+  return dias+'d';
+}
+
+// ── STATS COM PRAZOS E PENDÊNCIAS ────────────────────────────────────
+function renderStats(lista){
+  const el=document.getElementById('statsGrid');
+  const total=lista.length;
+  const alta=lista.filter(c=>c.analise&&/alta/i.test(c.analise.probabilidade||'')).length;
+  const pendDocs=lista.filter(c=>{
+    const docs=(c.docs||[]).map(d=>d.toLowerCase());
+    const temCnis=docs.some(d=>d.includes('cnis')||d.includes('extrato'));
+    const temLaudo=docs.some(d=>d.includes('laudo')||d.includes('relatorio')||d.includes('medico'));
+    return !temCnis||!temLaudo;
+  }).length;
+  // Prazos urgentes
+  let prazosUrg=0;
+  lista.forEach(c=>{
+    if(c.prazos&&c.prazos.length){
+      c.prazos.forEach(p=>{const d=diasRestantes(p.data);if(d!==null&&d<=15)prazosUrg++;});
+    }
+  });
+  el.innerHTML=[
+    {icon:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',cls:'si-blue',val:total,lbl:'Total de casos',extra:''},
+    {icon:'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',cls:'si-green',val:alta,lbl:'Prob. alta',extra:''},
+    {icon:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',cls:'si-amber',val:pendDocs,lbl:'Pendências documentais',extra:pendDocs>0?'warn-card':''},
+    {icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',cls:'si-purple',val:prazosUrg,lbl:'Prazos urgentes (≤15d)',extra:prazosUrg>0?'alert-card':''},
+  ].map(s=>`<div class="stat-card ${s.extra}" onclick="${s.lbl.includes('Prazo')?'switchPainelPrazos()':s.lbl.includes('Pend')?'filtrarPendDocs()':''}">
+    <div class="s-icon ${s.cls}">${s.icon}</div>
+    <div class="s-val">${s.val}</div>
+    <div class="s-lbl">${s.lbl}</div>
+  </div>`).join('');
+}
+
+function filtrarPendDocs(){
+  document.getElementById('filtroStatus').value='pend_docs';
+  renderList();
+}
+function switchPainelPrazos(){
+  document.getElementById('nav_prazos').click();
+}
+
+// ── FILTROS AVANÇADOS ────────────────────────────────────────────────
+let filtroFaseAtual='';
+function renderFilters(){
+  const wrap=document.getElementById('filtersRow');
+  if(!wrap)return;
+  wrap.innerHTML=`
+    <select class="filter-sel" id="filtroStatus" onchange="renderList()">
+      <option value="">Todos os status</option>
+      <option value="sem_analise">Sem análise</option>
+      <option value="pend_docs">Pendência documental</option>
+      <option value="alta">Prob. alta</option>
+      <option value="media">Prob. média</option>
+      <option value="baixa">Prob. baixa/nula</option>
+    </select>
+    <select class="filter-sel" id="filtroFaseAdv" onchange="renderList()">
+      <option value="">Todas as fases</option>
+      <option value="fase1_adm">Fase 1 — Administrativo</option>
+      <option value="fase2_ms">Fase 2 — MS/Recurso</option>
+      <option value="fase3_judicial">Fase 3 — Judicial</option>
+      <option value="fase4_dib">Fase 4 — Revisão DIB</option>
+    </select>
+    <span class="results-count" id="resultsCount"></span>`;
+}
+
+// ── LINHA DO TEMPO ────────────────────────────────────────────────────
+function renderTimeline(c){
+  const eventos=[];
+  const fmt=d=>d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):'';
+  if(c.dtAcidente) eventos.push({data:c.dtAcidente,label:'Acidente',sub:c.tpAcidente==='trabalho_tipico'?'Acidente de trabalho típico':c.tpAcidente==='trajeto'?'Acidente de trajeto':c.tpAcidente==='qualquer_natureza'?'Acidente de qualquer natureza':'Doença ocupacional',status:'ok',tag:'Origem'});
+  if(c.dib) eventos.push({data:c.dib,label:'Início do Auxílio-Doença',sub:'NB: '+(c.nb||'não informado'),status:'ok',tag:'B31/B91'});
+  if(c.dcb) eventos.push({data:c.dcb,label:'Cessação do benefício (DCB)',sub:'Marco para o AA — DIB = dia seguinte',status:'warn',tag:'DCB'});
+  const dib_aa=c.dcb?new Date(new Date(c.dcb+'T12:00:00').getTime()+86400000).toISOString().slice(0,10):null;
+  if(dib_aa) eventos.push({data:dib_aa,label:'DIB do Auxílio-Acidente',sub:'Termo inicial do benefício (art. 86 §2º / Tema 862 STJ)',status:'active',tag:'AA'});
+  const hoje=new Date().toISOString().slice(0,10);
+  eventos.push({data:hoje,label:'Fase atual: '+({fase1_adm:'Requerimento Administrativo',fase2_ms:'MS/Recurso',fase3_judicial:'Ação Judicial',fase4_dib:'Revisão DIB'}[c.fase]||c.fase),sub:'',status:'active',tag:'Hoje'});
+
+  if(!eventos.length) return '<p style="font-size:13px;color:var(--text3);padding:20px 0">Cadastre as datas do acidente e do benefício para visualizar a linha do tempo.</p>';
+
+  const sorted=eventos.sort((a,b)=>a.data.localeCompare(b.data));
+  return `<div class="timeline">${sorted.map(e=>`
+    <div class="tl-item">
+      <div class="tl-dot ${e.status}"></div>
+      <div class="tl-date">${fmt(e.data)}</div>
+      <div class="tl-label">${e.label}</div>
+      ${e.sub?`<div class="tl-sub">${e.sub}</div>`:''}
+      ${e.tag?`<span class="tl-tag ${e.status==='ok'?'green':e.status==='warn'?'amber':e.status==='active'?'blue':''}"> ${e.tag}</span>`:''}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── PRAZOS DO CASO ────────────────────────────────────────────────────
+function renderPrazosCase(c){
+  const prazos=c.prazos||[];
+  let html=`<div class="prazo-field">
+    <div class="field"><label>Descrição do prazo</label><input id="np_desc" placeholder="Ex.: Recurso CRPS" style="width:100%"></div>
+    <div class="field"><label>Data limite</label><input type="date" id="np_data"></div>
+    <button class="btn-add-prazo" onclick="addPrazo()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Adicionar prazo
+    </button>
+  </div>`;
+  if(!prazos.length){html+='<p style="font-size:13px;color:var(--text3)">Nenhum prazo cadastrado para este caso.</p>';return html;}
+  const sorted=[...prazos].sort((a,b)=>a.data.localeCompare(b.data));
+  html+=sorted.map(p=>{
+    const dias=diasRestantes(p.data);const cls=prazoClass(dias);
+    return `<div class="prazo-item">
+      <span class="prazo-badge ${cls}">${cls==='critico'?'CRÍTICO':cls==='urgente'?'URGENTE':'OK'}</span>
+      <span class="prazo-nome">${p.desc}</span>
+      <span class="prazo-data">${new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR')}</span>
+      <span class="prazo-dias ${cls}">${prazoLabel(dias)}</span>
+      <button onclick="removePrazo('${p.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);padding:2px 4px;font-size:12px">✕</button>
+    </div>`;
+  }).join('');
+  return html;
+}
+
+function addPrazo(){
+  if(!ativo)return;
+  const desc=document.getElementById('np_desc').value.trim();
+  const data=document.getElementById('np_data').value;
+  if(!desc||!data){alert('Preencha descrição e data.');return;}
+  if(!ativo.prazos)ativo.prazos=[];
+  ativo.prazos.push({id:'p'+Date.now(),desc,data});
+  saveLocal();
+  document.getElementById('prazos_content').innerHTML=renderPrazosCase(ativo);
+  document.getElementById('np_desc').value='';document.getElementById('np_data').value='';
+  renderList();
+}
+
+function removePrazo(id){
+  if(!ativo||!ativo.prazos)return;
+  ativo.prazos=ativo.prazos.filter(p=>p.id!==id);
+  saveLocal();
+  document.getElementById('prazos_content').innerHTML=renderPrazosCase(ativo);
+  renderList();
+}
+
+// ── HISTÓRICO DE AÇÕES ────────────────────────────────────────────────
+function addLog(c,texto){
+  if(!c.logs)c.logs=[];
+  c.logs.unshift({dt:new Date().toISOString(),texto});
+  if(c.logs.length>50)c.logs=c.logs.slice(0,50);
+}
+
+function renderLogs(c){
+  const logs=c.logs||[];
+  if(!logs.length) return '<p style="font-size:13px;color:var(--text3);padding:20px 0">Nenhuma ação registrada ainda.</p>';
+  return logs.map(l=>`<div class="log-item">
+    <div class="log-dot"></div>
+    <div class="log-date">${new Date(l.dt).toLocaleDateString('pt-BR')}</div>
+    <div class="log-text">${l.texto}</div>
+  </div>`).join('');
+}
+
+// ── PAINEL GLOBAL DE PRAZOS ──────────────────────────────────────────
+function renderPainelPrazos(){
+  const todos=[];
+  casos.forEach(c=>{
+    if(c.prazos&&c.prazos.length){
+      c.prazos.forEach(p=>{todos.push({...p,caso:c.nome,casoId:c.id});});
+    }
+  });
+  const sorted=todos.sort((a,b)=>a.data.localeCompare(b.data));
+  const el=document.getElementById('painel_prazos');
+  if(!el)return;
+  if(!sorted.length){el.innerHTML='<p style="font-size:13px;color:var(--text3);padding:20px 0">Nenhum prazo cadastrado nos casos.</p>';return;}
+  el.innerHTML=sorted.map(p=>{
+    const dias=diasRestantes(p.data);const cls=prazoClass(dias);
+    return `<div class="prazo-item" onclick="abrirCaso('${p.casoId}')" style="cursor:pointer">
+      <span class="prazo-badge ${cls}">${cls==='critico'?'CRÍTICO':cls==='urgente'?'URGENTE':'OK'}</span>
+      <div style="flex:1;min-width:0">
+        <div class="prazo-nome">${p.desc}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:1px">${p.caso}</div>
+      </div>
+      <span class="prazo-data">${new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR')}</span>
+      <span class="prazo-dias ${cls}">${prazoLabel(dias)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── ROADMAP ───────────────────────────────────────────────────────────
+function renderRoadmap(){
+  const fases=[
+    {
+      label:'Fase 1 — Disponível agora',badge:'rph-done',titulo:'Funcionalidades implementadas',
+      items:[
+        {ic:'rm-done-ic',check:true,text:'<strong>Cadastro completo de casos</strong> com dados do cliente, acidente e benefício',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Banco de dados Google Sheets</strong> — acesso de qualquer dispositivo',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Análise estratégica automática</strong> — probabilidade de êxito, matriz de vulnerabilidade e desenho estratégico',dep:'Requer API Claude (já integrada)'},
+        {ic:'rm-done-ic',check:true,text:'<strong>Checklist inteligente de documentos</strong> com reconhecimento automático de arquivos',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Mensagem de WhatsApp</strong> gerada automaticamente para o cliente',dep:'Requer API Claude'},
+        {ic:'rm-done-ic',check:true,text:'<strong>Quesitos periciais</strong> personalizados por caso',dep:'Requer API Claude'},
+        {ic:'rm-done-ic',check:true,text:'<strong>Exportação XML</strong> para geração de documentos Word com papel timbrado',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Login com senha criptografada</strong> (SHA-256)',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Cards estratégicos</strong> — pendências documentais e prazos urgentes',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Linha do tempo visual</strong> — acidente → auxílio-doença → DCB → DIB do AA',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Gestão de prazos</strong> por caso e painel global de prazos urgentes',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Histórico de ações</strong> por caso (log de auditoria)',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Filtros avançados</strong> por fase, status e pendência documental',dep:''},
+        {ic:'rm-done-ic',check:true,text:'<strong>Trava de segurança jurídica</strong> — alerta para individual/facultativo e menor de idade',dep:''},
+      ]
+    },
+    {
+      label:'Fase 2 — Próxima evolução',badge:'rph-next',titulo:'Em planejamento (sem custo adicional)',
+      items:[
+        {ic:'rm-next-ic',check:false,text:'<strong>Multi-usuário com perfis</strong> — advogada, assistente, estagiário com permissões diferentes',dep:''},
+        {ic:'rm-next-ic',check:false,text:'<strong>Notificações de prazos por e-mail</strong> — alerta automático 7 e 2 dias antes',dep:'Requer Google Apps Script adicional'},
+        {ic:'rm-next-ic',check:false,text:'<strong>Filtro por responsável</strong> — visualizar casos por membro da equipe',dep:''},
+        {ic:'rm-next-ic',check:false,text:'<strong>Dashboard com gráficos</strong> — evolução mensal de casos, taxa de êxito por fase',dep:''},
+        {ic:'rm-next-ic',check:false,text:'<strong>Cálculo automático de honorários e retroativos</strong> — salário de benefício × meses em atraso',dep:''},
+        {ic:'rm-next-ic',check:false,text:'<strong>Geração de documentos Word direto no sistema</strong> — sem precisar colar XML no Claude',dep:'Requer backend simples (Railway/Render)'},
+      ]
+    },
+    {
+      label:'Fase 3 — Com API Claude ativa',badge:'rph-future',titulo:'Requer chave de API da Anthropic',
+      items:[
+        {ic:'rm-future-ic',check:false,text:'<strong>OCR inteligente nos uploads</strong> — ler CNIS, laudos e CTPS e preencher campos automaticamente',dep:'API Claude — custo por uso (~R$0,20/análise)'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Análise automática ao cadastrar</strong> — sem precisar clicar em "Gerar análise"',dep:'API Claude'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Copilot lateral de petição</strong> — janela dupla com dados à esquerda e peça gerada à direita',dep:'API Claude + backend'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Seleção de teses jurídicas</strong> — checkboxes para incluir teses específicas na petição',dep:'API Claude'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Campos editáveis destacados</strong> — IA marca em amarelo os pontos que precisam de revisão humana',dep:'API Claude'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Identificação de nexo causal</strong> — IA analisa documentos e aponta probabilidade do nexo automaticamente',dep:'API Claude'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Sugestão automática de quesitos</strong> baseada na especialidade do perito designado',dep:'API Claude'},
+      ]
+    },
+    {
+      label:'Fase 4 — Versão comercial',badge:'rph-future',titulo:'Para licenciamento a outros escritórios',
+      items:[
+        {ic:'rm-future-ic',check:false,text:'<strong>Customização de marca</strong> — cada escritório com seu logo e timbrado',dep:''},
+        {ic:'rm-future-ic',check:false,text:'<strong>Módulos por área</strong> — Auxílio-Doença, Aposentadoria por Incapacidade, BPC/LOAS',dep:''},
+        {ic:'rm-future-ic',check:false,text:'<strong>Painel de gestão SaaS</strong> — controle de assinaturas, usuários e uso por escritório',dep:'Backend dedicado'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Integração com Kommo CRM</strong> — sincronização de leads e clientes',dep:'API Kommo'},
+        {ic:'rm-future-ic',check:false,text:'<strong>Integração com PJe / e-SAJ</strong> — acompanhamento processual automático',dep:'APIs dos tribunais'},
+      ]
+    },
+  ];
+
+  return fases.map((f,i)=>`
+    <div class="roadmap-phase">
+      <div class="roadmap-phase-head" onclick="toggleRm(${i})">
+        <span class="rph-badge ${f.badge}">${f.label}</span>
+        <span class="rph-title">${f.titulo}</span>
+        <svg class="rph-toggle" id="rmt${i}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="roadmap-phase-body ${i===0?'open':''}" id="rmb${i}">
+        ${f.items.map(it=>`<div class="rm-item">
+          <div class="rm-icon ${it.ic}">
+            <svg viewBox="0 0 24 24">${it.check?'<polyline points="20 6 9 17 4 12"/>':'<line x1="12" y1="8" x2="12" y2="16"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}</svg>
+          </div>
+          <div>
+            <div class="rm-text">${it.text}</div>
+            ${it.dep?`<div class="rm-dep"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>${it.dep}</div>`:''}
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleRm(i){
+  const body=document.getElementById('rmb'+i);const icon=document.getElementById('rmt'+i);
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  icon.style.transform=open?'':'rotate(180deg)';
+}
+
+loadStorage();renderList();renderFilters();
+</script>
+</body>
+</html>
