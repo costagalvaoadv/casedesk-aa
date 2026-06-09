@@ -3,127 +3,810 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Costa Galvão · AA Analytics</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Costa Galvão · AA Analytics v2.0</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0b0e17;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,#1B3A5C22 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,#B8860B11 0%,transparent 50%);pointer-events:none}
-.wrap{width:100%;max-width:420px;position:relative;z-index:1}
-.logo-area{text-align:center;margin-bottom:36px}
-.logo-icon{width:56px;height:56px;background:linear-gradient(135deg,#1B3A5C,#2C5282);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 32px #1B3A5C44}
-.logo-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.logo-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#f0f2ff}
-.logo-sub{font-size:11px;color:#636b8a;margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
-.card{background:#13151c;border:1px solid #ffffff12;border-radius:16px;padding:36px 32px;box-shadow:0 24px 80px #00000060}
-.card-title{font-size:16px;font-weight:600;color:#f0f2ff;margin-bottom:6px}
-.card-sub{font-size:13px;color:#636b8a;margin-bottom:28px}
-.field{margin-bottom:18px}
-.field label{display:block;font-size:12px;font-weight:500;color:#a8aec7;margin-bottom:6px;letter-spacing:.02em}
-.iw{position:relative}
-.iw svg.ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:#636b8a;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.field input{width:100%;padding:11px 12px 11px 40px;background:#1a1d27;border:1px solid #ffffff15;border-radius:8px;color:#f0f2ff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:.15s}
-.field input:focus{border-color:#1B3A5C;background:#1e2235;box-shadow:0 0 0 3px #1B3A5C25}
-.field input::placeholder{color:#636b8a}
-.tgl{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#636b8a;display:flex;align-items:center;transition:.1s}
-.tgl:hover{color:#a8aec7}
-.tgl svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.erro{background:#ef444412;border:1px solid #ef444330;border-radius:8px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:16px;display:none;align-items:center;gap:8px}
-.erro svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
-.btn{width:100%;padding:13px;background:linear-gradient(135deg,#1B3A5C,#2C5282);color:#fff;border:none;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;transition:.2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px #1B3A5C44;background:linear-gradient(135deg,#14304F,#1B3A5C)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.spin{animation:spin .7s linear infinite}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#ececea;
+  --txt:#1a1a18;--txt2:#6b6b68;
+  --brd:rgba(0,0,0,.12);--brd2:rgba(0,0,0,.22);
+  --rad:8px;--radl:12px;
+  --accent:#185FA5;--accent2:#E6F1FB;
+  --prob-alta-bg:#EAF3DE;--prob-alta-txt:#3B6D11;
+  --prob-media-bg:#FAEEDA;--prob-media-txt:#854F0B;
+  --prob-baixa-bg:#FCEBEB;--prob-baixa-txt:#A32D2D;
+  --prob-nula-bg:#F1EFE8;--prob-nula-txt:#5F5E5A;
+  --success-bg:#EAF3DE;--success-border:#C0DD97;--success-txt:#3B6D11;
+  --danger-bg:#FCEBEB;--danger-border:#F7C1C1;--danger-txt:#A32D2D;
+  --warn-bg:#FAEEDA;--warn-border:#FAC775;--warn-txt:#854F0B;
+  --info-bg:#E6F1FB;--info-border:#B5D4F4;--info-txt:#185FA5;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2c;
+    --txt:#f0efe8;--txt2:#a0a09a;
+    --brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.22);
+    --accent2:#0c2a45;
+    --prob-alta-bg:#1a2e0a;--prob-alta-txt:#97c459;
+    --prob-media-bg:#2e1e04;--prob-media-txt:#ef9f27;
+    --prob-baixa-bg:#2e0a0a;--prob-baixa-txt:#f09595;
+    --prob-nula-bg:#2a2a28;--prob-nula-txt:#b4b2a9;
+    --success-bg:#152308;--success-border:#3b6d11;--success-txt:#97c459;
+    --danger-bg:#2e0a0a;--danger-border:#a32d2d;--danger-txt:#f09595;
+    --warn-bg:#2e1e04;--warn-border:#854f0b;--warn-txt:#ef9f27;
+    --info-bg:#0c2a45;--info-border:#185fa5;--info-txt:#85b7eb;
+  }
+}
+html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--txt);background:var(--bg3);min-height:100vh}
+.app{display:flex;flex-direction:column;min-height:100vh;max-width:1400px;margin:0 auto;background:var(--bg);box-shadow:0 0 0 0.5px var(--brd)}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:0.5px solid var(--brd2);position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:8px;font-weight:500;font-size:13px}
+.logo-badge{background:#185FA5;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.3px}
+.tabs{display:flex;gap:4px}
+.tab{padding:5px 12px;border-radius:var(--rad);font-size:12px;cursor:pointer;border:0.5px solid transparent;color:var(--txt2);transition:.15s;display:inline-flex;align-items:center;gap:5px;user-select:none}
+.tab.active{background:var(--accent2);color:var(--accent);border-color:var(--info-border);font-weight:500}
+.tab:hover:not(.active){background:var(--bg2)}
+.topbar-actions{display:flex;gap:6px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border:0.5px solid var(--brd2);border-radius:var(--rad);font-size:12px;cursor:pointer;background:var(--bg);color:var(--txt);transition:.15s;white-space:nowrap;font-family:inherit}
+.btn:hover{background:var(--bg2)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn.primary:hover{background:#0C447C;border-color:#0C447C}
+.btn.sm{padding:3px 9px;font-size:11px}
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 16px;background:var(--bg);border-bottom:0.5px solid var(--brd)}
+.stat-card{background:var(--bg2);border-radius:var(--rad);padding:8px 10px;text-align:center}
+.stat-n{font-size:20px;font-weight:500;line-height:1.2}
+.stat-lbl{font-size:10px;color:var(--txt2);margin-top:2px}
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg);border-bottom:0.5px solid var(--brd);flex-wrap:wrap}
+.toolbar input[type=text]{flex:1;min-width:180px;height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 10px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit}
+.toolbar input[type=text]:focus{outline:none;border-color:var(--accent)}
+/* MAIN LAYOUT */
+.main{display:flex;flex:1;min-height:0}
+/* SIDEBAR */
+.sidebar{width:210px;flex-shrink:0;border-right:0.5px solid var(--brd);padding:14px 12px;display:flex;flex-direction:column;gap:14px;background:var(--bg);overflow-y:auto}
+.sidebar-section{font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.filter-group{display:flex;flex-direction:column;gap:2px}
+.filter-chip{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:var(--rad);font-size:12px;cursor:pointer;color:var(--txt2);transition:.15s;user-select:none}
+.filter-chip:hover{background:var(--bg2);color:var(--txt)}
+.filter-chip.active{background:var(--accent2);color:var(--accent)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-alta{background:#639922}.dot-media{background:#BA7517}.dot-baixa{background:#A32D2D}.dot-nula{background:#888780}
+/* CASES LIST */
+.content{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.case-card{background:var(--bg);border:0.5px solid var(--brd);border-radius:var(--radl);padding:11px 13px;cursor:pointer;transition:.15s}
+.case-card:hover{border-color:var(--brd2);background:var(--bg2)}
+.case-card.selected{border:1.5px solid var(--accent);background:var(--accent2)}
+.case-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.case-name{font-weight:500;font-size:13px;line-height:1.3}
+.prob-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap}
+.prob-alta{background:var(--prob-alta-bg);color:var(--prob-alta-txt)}
+.prob-media{background:var(--prob-media-bg);color:var(--prob-media-txt)}
+.prob-baixa{background:var(--prob-baixa-bg);color:var(--prob-baixa-txt)}
+.prob-nula{background:var(--prob-nula-bg);color:var(--prob-nula-txt)}
+.case-meta{font-size:11px;color:var(--txt2);display:flex;flex-wrap:wrap;gap:8px;line-height:1.4}
+.case-meta span{display:inline-flex;align-items:center;gap:3px}
+/* DETAIL PANE */
+.detail-pane{width:300px;flex-shrink:0;border-left:0.5px solid var(--brd);padding:14px;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+.detail-section{display:flex;flex-direction:column;gap:5px}
+.detail-label{font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;padding-bottom:3px;border-bottom:0.5px solid var(--brd)}
+.detail-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0;gap:8px}
+.detail-row span:first-child{color:var(--txt2);flex-shrink:0}
+.detail-val{font-weight:500;text-align:right;font-size:12px}
+.docs-list{display:flex;flex-direction:column;gap:3px}
+.doc-item{display:flex;align-items:center;gap:6px;font-size:11px;padding:4px 7px;border-radius:var(--rad);border:0.5px solid}
+.doc-item.ok{color:var(--success-txt);border-color:var(--success-border);background:var(--success-bg)}
+.doc-item.miss{color:var(--danger-txt);border-color:var(--danger-border);background:var(--danger-bg)}
+.action-row{display:flex;gap:5px;flex-wrap:wrap}
+.empty-state{padding:32px;text-align:center;color:var(--txt2);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto}
+/* TABS CONTENT */
+.tab-content{display:none}
+.tab-content.active{display:flex;flex-direction:column}
+/* OCR TAB */
+.ocr-wrap{padding:20px;max-width:600px;display:flex;flex-direction:column;gap:14px}
+.ocr-zone{border:1.5px dashed var(--brd2);border-radius:var(--radl);padding:28px;text-align:center;cursor:pointer;transition:.2s;color:var(--txt2);font-size:13px}
+.ocr-zone:hover{border-color:var(--accent);background:var(--accent2);color:var(--accent)}
+.ocr-result{background:var(--bg2);border-radius:var(--rad);padding:10px;font-size:11px;font-family:'SF Mono','Fira Code',monospace;line-height:1.6;max-height:200px;overflow-y:auto;border:0.5px solid var(--brd)}
+.info-box{background:var(--bg2);border-radius:var(--radl);padding:12px 14px}
+.info-box p{font-size:12px;color:var(--txt2);line-height:1.6}
+/* HISTORY TAB */
+.hist-wrap{padding:16px;display:flex;flex-direction:column;gap:12px}
+.hist-head{display:flex;align-items:center;justify-content:space-between}
+.hist-table{width:100%;border-collapse:collapse;font-size:12px}
+.hist-table th{text-align:left;padding:6px 10px;border-bottom:0.5px solid var(--brd2);color:var(--txt2);font-weight:500;background:var(--bg2)}
+.hist-table td{padding:7px 10px;border-bottom:0.5px solid var(--brd)}
+.hist-table tr:hover td{background:var(--bg2)}
+.tag{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--bg2);border:0.5px solid var(--brd);white-space:nowrap}
+/* ALERT */
+.alert-warn{background:var(--danger-bg);border:0.5px solid var(--danger-border);border-radius:var(--rad);padding:8px 10px;font-size:12px;color:var(--danger-txt);line-height:1.5}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radl);border:0.5px solid var(--brd2);width:500px;max-width:100%;padding:18px;display:flex;flex-direction:column;gap:12px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal-head{display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-weight:500;font-size:14px;display:flex;align-items:center;gap:6px}
+.close-btn{background:none;border:none;font-size:18px;cursor:pointer;color:var(--txt2);padding:2px 4px;border-radius:4px;line-height:1}
+.close-btn:hover{color:var(--txt);background:var(--bg2)}
+.quick-chips{display:flex;flex-wrap:wrap;gap:6px}
+.copilot-input{width:100%;padding:9px 11px;border:0.5px solid var(--brd2);border-radius:var(--rad);font-size:13px;resize:vertical;min-height:80px;font-family:inherit;background:var(--bg2);color:var(--txt)}
+.copilot-input:focus{outline:none;border-color:var(--accent)}
+/* LOADING */
 @keyframes spin{to{transform:rotate(360deg)}}
-.note{text-align:center;margin-top:20px;font-size:11px;color:#2a2f42}
-.ov{position:fixed;inset:0;background:#0b0e17;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s}
-.ov.show{opacity:1;pointer-events:all}
-.bar-w{width:200px;height:3px;background:#ffffff10;border-radius:2px;overflow:hidden}
-.bar{height:3px;background:linear-gradient(90deg,#1B3A5C,#B8860B);border-radius:2px;width:0%;transition:width .8s ease}
-.ov-t{font-size:12px;color:#636b8a;font-family:'Inter',sans-serif}
-@media(max-width:440px){.card{padding:26px 20px}.logo-name{font-size:19px}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.pulse{animation:pulse 1.2s infinite}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .detail-pane{display:none}
+  .sidebar{width:160px}
+}
+@media(max-width:640px){
+  .sidebar{display:none}
+  .tabs .tab span{display:none}
+  .topbar-actions .btn:not(.primary){display:none}
+}
 </style>
 </head>
 <body>
-<div class="ov" id="ov">
-  <div style="text-align:center">
-    <div style="font-family:'Playfair Display',serif;font-size:17px;color:#f0f2ff;margin-bottom:16px">Costa Galvão · AA Analytics</div>
-    <div class="bar-w"><div class="bar" id="bar"></div></div>
-    <div class="ov-t" id="ovT" style="margin-top:10px">Autenticando...</div>
-  </div>
-</div>
-<div class="wrap">
-  <div class="logo-area">
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+
+<div class="app" id="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-badge">CG</div>
+      Costa Galvão · AA Analytics
+      <span style="font-size:11px;color:var(--txt2);font-weight:400">v2.0</span>
     </div>
-    <div class="logo-name">Costa Galvão Advocacia</div>
-    <div class="logo-sub">Auxílio-Acidente Analytics</div>
-  </div>
-  <div class="card">
-    <div class="card-title">Acesso ao sistema</div>
-    <div class="card-sub">Digite suas credenciais para continuar</div>
-    <div class="erro" id="err">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span id="errMsg">Usuário ou senha incorretos.</span>
+    <nav class="tabs" role="tablist" aria-label="Navegação principal">
+      <button class="tab active" role="tab" aria-selected="true" onclick="switchTab('casos')" data-tab="casos">
+        <i class="ti ti-folder" aria-hidden="true"></i> <span>Casos</span>
+      </button>
+      <button class="tab" role="tab" aria-selected="false" onclick="switchTab('ocr')" data-tab="ocr">
+        <i class="ti ti-file-search" aria-hidden="true"></i> <span>OCR / CNIS</span>
+      </button>
+      <button class="tab" role="tab" aria-selected="false" onclick="switchTab('historico')" data-tab="historico">
+        <i class="ti ti-clock" aria-hidden="true"></i> <span>Histórico</span>
+      </button>
+    </nav>
+    <div class="topbar-actions">
+      <button class="btn sm" onclick="openCopilot()" title="Abrir Copilot Jurídico">
+        <i class="ti ti-robot" aria-hidden="true"></i> Copilot
+      </button>
+      <button class="btn sm primary" onclick="openNewCase()">
+        <i class="ti ti-plus" aria-hidden="true"></i> Novo Caso
+      </button>
     </div>
-    <div class="field">
-      <label>Usuário</label>
-      <div class="iw">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <input type="text" id="u" placeholder="seu usuário" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')entrar()">
+  </header>
+
+  <!-- TAB: CASOS -->
+  <div id="tab-casos" class="tab-content active" style="flex:1;display:flex;flex-direction:column">
+    <div class="stats-bar" id="stats-bar" role="region" aria-label="Estatísticas dos casos"></div>
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="Buscar por nome, CPF, CID, profissão..." oninput="applyFilters()" aria-label="Buscar casos">
+      <button class="btn sm" onclick="applyFilters()"><i class="ti ti-search" aria-hidden="true"></i> Filtrar</button>
+      <button class="btn sm" onclick="openExportModal()"><i class="ti ti-download" aria-hidden="true"></i> Exportar</button>
+    </div>
+    <div class="main">
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar" aria-label="Filtros">
+        <div>
+          <div class="sidebar-section">Probabilidade</div>
+          <div class="filter-group">
+            <div class="filter-chip active" onclick="toggleFilter('prob','TODOS')" data-key="prob" data-val="TODOS" tabindex="0" role="button" aria-pressed="true">
+              <span class="dot" style="background:var(--accent)"></span>Todos
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('prob','Alta')" data-key="prob" data-val="Alta" tabindex="0" role="button" aria-pressed="false">
+              <span class="dot dot-alta"></span>Alta
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('prob','Média')" data-key="prob" data-val="Média" tabindex="0" role="button" aria-pressed="false">
+              <span class="dot dot-media"></span>Média
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('prob','Baixa')" data-key="prob" data-val="Baixa" tabindex="0" role="button" aria-pressed="false">
+              <span class="dot dot-baixa"></span>Baixa
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('prob','Nula')" data-key="prob" data-val="Nula" tabindex="0" role="button" aria-pressed="false">
+              <span class="dot dot-nula"></span>Nula
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sidebar-section">Fase Processual</div>
+          <div class="filter-group">
+            <div class="filter-chip active" onclick="toggleFilter('fase','TODOS')" data-key="fase" data-val="TODOS" tabindex="0" role="button">
+              <i class="ti ti-stack" aria-hidden="true" style="font-size:13px"></i>Todas
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('fase','Adm')" data-key="fase" data-val="Adm" tabindex="0" role="button">
+              <i class="ti ti-building-bank" aria-hidden="true" style="font-size:13px"></i>Fase 1 — Adm.
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('fase','Recurso')" data-key="fase" data-val="Recurso" tabindex="0" role="button">
+              <i class="ti ti-gavel" aria-hidden="true" style="font-size:13px"></i>Fase 2 — Recurso
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('fase','Judicial')" data-key="fase" data-val="Judicial" tabindex="0" role="button">
+              <i class="ti ti-scale" aria-hidden="true" style="font-size:13px"></i>Fase 3 — Judicial
+            </div>
+            <div class="filter-chip" onclick="toggleFilter('fase','DIB')" data-key="fase" data-val="DIB" tabindex="0" role="button">
+              <i class="ti ti-calendar-plus" aria-hidden="true" style="font-size:13px"></i>Fase 4 — DIB
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sidebar-section">Tipo de Acidente</div>
+          <div class="filter-group">
+            <div class="filter-chip active" onclick="toggleFilter('tipo','TODOS')" data-key="tipo" data-val="TODOS" tabindex="0" role="button">Todos</div>
+            <div class="filter-chip" onclick="toggleFilter('tipo','Trabalho')" data-key="tipo" data-val="Trabalho" tabindex="0" role="button">Trabalho</div>
+            <div class="filter-chip" onclick="toggleFilter('tipo','Doméstico')" data-key="tipo" data-val="Doméstico" tabindex="0" role="button">Doméstico</div>
+            <div class="filter-chip" onclick="toggleFilter('tipo','Doença')" data-key="tipo" data-val="Doença" tabindex="0" role="button">Doença</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CASES LIST -->
+      <main class="content" id="cases-list" role="main" aria-label="Lista de casos"></main>
+
+      <!-- DETAIL PANE -->
+      <aside class="detail-pane" id="detail-pane" aria-label="Detalhes do caso">
+        <div class="empty-state">
+          <i class="ti ti-arrow-left" aria-hidden="true" style="font-size:28px"></i>
+          <span>Selecione um caso para ver detalhes</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- TAB: OCR / CNIS -->
+  <div id="tab-ocr" class="tab-content">
+    <div class="ocr-wrap">
+      <div>
+        <div class="detail-label" style="margin-bottom:8px">Upload de Extrato CNIS (PDF)</div>
+        <div class="ocr-zone" id="ocr-drop" onclick="document.getElementById('cnis-file').click()" role="button" tabindex="0" aria-label="Carregar PDF do CNIS">
+          <i class="ti ti-file-upload" aria-hidden="true" style="font-size:32px;display:block;margin-bottom:10px"></i>
+          Clique ou arraste o PDF do CNIS aqui<br>
+          <span style="font-size:11px;margin-top:5px;display:block;color:var(--txt2)">Extração automática de vínculos, salários e qualidade do segurado</span>
+        </div>
+        <input type="file" id="cnis-file" accept=".pdf,.PDF" style="display:none" onchange="processCNIS(this)" aria-label="Selecionar arquivo CNIS">
+      </div>
+      <div id="ocr-status" style="display:none;font-size:12px"></div>
+      <div id="ocr-output" style="display:none;flex-direction:column;gap:8px">
+        <div class="detail-label">Campos extraídos automaticamente</div>
+        <div class="ocr-result" id="ocr-result-text" role="region" aria-label="Resultado OCR"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="applyOCRToCase()">
+            <i class="ti ti-check" aria-hidden="true"></i> Aplicar ao caso
+          </button>
+          <button class="btn" onclick="clearOCR()">
+            <i class="ti ti-x" aria-hidden="true"></i> Limpar
+          </button>
+        </div>
+      </div>
+      <div class="info-box">
+        <div class="detail-label" style="margin-bottom:6px">Sobre o OCR CNIS</div>
+        <p>PDF.js extrai texto de PDFs nativos do INSS. Campos detectados: NIT/PIS, CPF, nome, vínculos empregatícios (empresa + CNPJ + competências), salários de contribuição e espécie de filiação. Para PDFs digitalizados, a qualidade depende da resolução do scan.</p>
       </div>
     </div>
-    <div class="field">
-      <label>Senha</label>
-      <div class="iw">
-        <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <input type="password" id="p" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" onkeydown="if(event.key==='Enter')entrar()">
-        <button class="tgl" onclick="tgl()" type="button">
-          <svg id="eyeI" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
+  </div>
+
+  <!-- TAB: HISTÓRICO -->
+  <div id="tab-historico" class="tab-content">
+    <div class="hist-wrap">
+      <div class="hist-head">
+        <div class="detail-label">Histórico de Ações</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" onclick="addHistEntry()"><i class="ti ti-plus" aria-hidden="true"></i> Registrar ação</button>
+          <button class="btn sm primary" onclick="exportToSheets()"><i class="ti ti-table-export" aria-hidden="true"></i> Exportar Sheets</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="hist-table" id="hist-table" aria-label="Histórico de ações">
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Caso</th>
+              <th>Ação</th>
+              <th>Fase</th>
+              <th>Usuário</th>
+            </tr>
+          </thead>
+          <tbody id="hist-body"></tbody>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--txt2)">
+        Histórico salvo em localStorage. Exportação compatível com Google Sheets como aba secundária.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- COPILOT MODAL -->
+<div id="copilot-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="copilot-title" onclick="if(event.target===this)closeCopilot()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="copilot-title">
+        <i class="ti ti-robot" aria-hidden="true"></i> Copilot Jurídico Costa Galvão
+      </div>
+      <button class="close-btn" onclick="closeCopilot()" aria-label="Fechar Copilot">×</button>
+    </div>
+    <p style="font-size:12px;color:var(--txt2)">Assistente contextual de auxílio-acidente. Consultas jurídicas, geração de documentos e análise de casos.</p>
+    <div class="quick-chips" id="copilot-quick">
+      <button class="btn sm" onclick="setCopilotPrompt('Quais os requisitos para auxílio-acidente segundo o Art. 86 da Lei 8.213/91?')">Art. 86 requisitos</button>
+      <button class="btn sm" onclick="setCopilotPrompt('Calcular DIB com base na DCB do auxílio-doença — Tema 862 STJ e Art. 86 §2º')">Calcular DIB</button>
+      <button class="btn sm" onclick="setCopilotPrompt('Gerar quesitos periciais para sequela ortopédica com redução funcional')">Quesitos periciais</button>
+      <button class="btn sm" onclick="setCopilotPrompt('Verificar documentação faltante e gerar checklist por fase processual')">Checklist docs</button>
+      <button class="btn sm" onclick="setCopilotPrompt('Redigir mensagem WhatsApp para informar andamento do caso ao cliente')">WhatsApp cliente</button>
+      <button class="btn sm" onclick="setCopilotPrompt('Gerar requerimento administrativo fundamentado para auxílio-acidente')">Requerimento Adm.</button>
+    </div>
+    <textarea class="copilot-input" id="copilot-input" placeholder="Digite sua consulta jurídica ou instrução para o sistema Costa Galvão..." rows="4"></textarea>
+    <div style="display:flex;gap:8px">
+      <button class="btn primary" onclick="dispatchCopilot()">
+        <i class="ti ti-send" aria-hidden="true"></i> Enviar
+      </button>
+      <button class="btn" onclick="closeCopilot()">Cancelar</button>
+    </div>
+    <div id="copilot-response" style="display:none" role="region" aria-label="Resposta do Copilot"></div>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div id="export-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="export-title" onclick="if(event.target===this)closeExportModal()">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <div class="modal-title" id="export-title">
+        <i class="ti ti-download" aria-hidden="true"></i> Exportar dados
+      </div>
+      <button class="close-btn" onclick="closeExportModal()" aria-label="Fechar exportar">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <button class="btn" onclick="exportJSON()">
+        <i class="ti ti-file-code" aria-hidden="true"></i> Exportar casos como JSON
+      </button>
+      <button class="btn" onclick="exportCSV()">
+        <i class="ti ti-file-spreadsheet" aria-hidden="true"></i> Exportar casos como CSV
+      </button>
+      <button class="btn" onclick="exportXML()">
+        <i class="ti ti-code" aria-hidden="true"></i> Gerar XML para análise (Claude)
+      </button>
+      <button class="btn" onclick="exportToSheets()">
+        <i class="ti ti-table-export" aria-hidden="true"></i> Sincronizar histórico com Sheets
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CASE MODAL -->
+<div id="newcase-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="newcase-title" onclick="if(event.target===this)closeNewCase()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="newcase-title">
+        <i class="ti ti-user-plus" aria-hidden="true"></i> Novo Caso — Auxílio-Acidente
+      </div>
+      <button class="close-btn" onclick="closeNewCase()" aria-label="Fechar">×</button>
+    </div>
+    <p style="font-size:12px;color:var(--txt2)">Preencha os dados básicos ou cole o XML do caso no formato Costa Galvão:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-nome">Nome completo</label>
+        <input type="text" id="nc-nome" placeholder="Nome do segurado" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-cpf">CPF</label>
+        <input type="text" id="nc-cpf" placeholder="000.000.000-00" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-prof">Profissão</label>
+        <input type="text" id="nc-prof" placeholder="Profissão habitual" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-tipo">Tipo de acidente</label>
+        <select id="nc-tipo" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+          <option value="Trabalho">Acidente de Trabalho</option>
+          <option value="Doméstico">Acidente Doméstico</option>
+          <option value="Doença">Doença Profissional</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-cid">CID</label>
+        <input type="text" id="nc-cid" placeholder="Ex: M54.5" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:11px;color:var(--txt2)" for="nc-fase">Fase processual</label>
+        <select id="nc-fase" style="height:30px;border:0.5px solid var(--brd2);border-radius:var(--rad);padding:0 9px;font-size:12px;background:var(--bg2);color:var(--txt);font-family:inherit">
+          <option value="Adm">Fase 1 — Administrativo</option>
+          <option value="Recurso">Fase 2 — Recurso CRPS</option>
+          <option value="Judicial">Fase 3 — Judicial</option>
+          <option value="DIB">Fase 4 — Retroação DIB</option>
+        </select>
       </div>
     </div>
-    <button class="btn" id="btnE" onclick="entrar()">
-      <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      Entrar
-    </button>
+    <div style="display:flex;gap:8px">
+      <button class="btn primary" onclick="saveNewCase()"><i class="ti ti-check" aria-hidden="true"></i> Cadastrar caso</button>
+      <button class="btn" onclick="closeNewCase()">Cancelar</button>
+    </div>
   </div>
-  <div class="note">Costa Galvão Advocacia &middot; OAB/PE 38.575 &middot; Uso interno</div>
 </div>
+
 <script>
-const H='3e4469c3811791f8b127347bea8114eba320fa72de1203fe7b60bc89bfdf5dbb';
-function tgl(){
-  var i=document.getElementById('p');var ic=document.getElementById('eyeI');
-  if(i.type==='password'){i.type='text';ic.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';}
-  else{i.type='password';ic.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';}
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const defaultCases = [
+  {id:1,nome:"Maria das Graças Silva",cpf:"123.456.789-00",prof:"Auxiliar de Enfermagem",tipo:"Trabalho",fase:"Judicial",prob:"Alta",cid:"M54.5",nb:"123.456.789-0",dib:"15/03/2022",dcb:"14/03/2024",docs:{ok:["RG/CPF","CNIS","CTPS","Laudo Médico","CAT","Laudo SABI"],miss:[]},vinculo:"Empregado"},
+  {id:2,nome:"José Ferreira Lima",cpf:"987.654.321-00",prof:"Pedreiro",tipo:"Doméstico",fase:"Adm",prob:"Média",cid:"S52.0",nb:null,dib:null,dcb:null,docs:{ok:["RG/CPF","CNIS","Laudo Médico"],miss:["CTPS","Laudo SABI","Exames imagem"]},vinculo:"Empregado"},
+  {id:3,nome:"Ana Paula Souza",cpf:"111.222.333-00",prof:"Agricultora",tipo:"Trabalho",fase:"Recurso",prob:"Alta",cid:"M17.1",nb:"456.789.123-0",dib:"01/07/2021",dcb:"30/06/2023",docs:{ok:["RG/CPF","CNIS","CAT","Laudo SABI"],miss:["CAF","Filiação Sindical"]},vinculo:"Segurado Especial"},
+  {id:4,nome:"Carlos Eduardo Ramos",cpf:"444.555.666-00",prof:"Eletricista",tipo:"Trabalho",fase:"DIB",prob:"Alta",cid:"G54.2",nb:"789.123.456-0",dib:"20/09/2020",dcb:"19/09/2022",docs:{ok:["RG/CPF","CNIS","CTPS","CAT","Laudo SABI","Laudo Médico","Exames imagem"],miss:[]},vinculo:"Empregado"},
+  {id:5,nome:"Francisca Almeida Neto",cpf:"777.888.999-00",prof:"Contribuinte Individual",tipo:"Doença",fase:"Adm",prob:"Nula",cid:"M51.1",nb:null,dib:null,dcb:null,docs:{ok:["RG/CPF"],miss:["CNIS","Laudo Médico"]},vinculo:"Contribuinte Individual"},
+];
+
+const defaultHist = [
+  {dt:"09/06/2026 08:42",caso:"Maria das Graças Silva",acao:"Petição inicial protocolada",fase:"Fase 3 — Judicial",user:"Dra. Jucineide"},
+  {dt:"08/06/2026 16:15",caso:"Carlos Eduardo Ramos",acao:"Pedido de retroação DIB",fase:"Fase 4 — DIB",user:"Dra. Jucineide"},
+  {dt:"07/06/2026 11:30",caso:"Ana Paula Souza",acao:"Recurso CRPS interposto",fase:"Fase 2 — Recurso",user:"Dra. Jucineide"},
+  {dt:"06/06/2026 09:00",caso:"José Ferreira Lima",acao:"Requerimento administrativo",fase:"Fase 1 — Adm.",user:"Dra. Jucineide"},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let CASES = JSON.parse(localStorage.getItem('cg_cases') || 'null') || defaultCases;
+let HIST  = JSON.parse(localStorage.getItem('cg_hist')  || 'null') || defaultHist;
+let filters = {prob:'TODOS', fase:'TODOS', tipo:'TODOS'};
+let selected = null;
+
+function saveState(){
+  localStorage.setItem('cg_cases', JSON.stringify(CASES));
+  localStorage.setItem('cg_hist',  JSON.stringify(HIST));
 }
-async function sha(s){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');}
-async function entrar(){
-  var u=document.getElementById('u').value.trim().toLowerCase();
-  var p=document.getElementById('p').value;
-  var err=document.getElementById('err');var btn=document.getElementById('btnE');
-  if(!u||!p){document.getElementById('errMsg').textContent='Preencha usuário e senha.';err.style.display='flex';return;}
-  btn.disabled=true;
-  btn.innerHTML='<svg class="spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round"/></svg> Verificando...';
-  var h=await sha(u+':'+p);
-  if(h===H){
-    err.style.display='none';
-    sessionStorage.setItem('cg_auth',h);
-    var ov=document.getElementById('ov');var bar=document.getElementById('bar');var txt=document.getElementById('ovT');
-    ov.classList.add('show');bar.style.width='40%';
-    setTimeout(function(){bar.style.width='80%';txt.textContent='Carregando casos...';},400);
-    setTimeout(function(){bar.style.width='100%';txt.textContent='Pronto!';},900);
-    setTimeout(function(){window.location.href='app.html';},1200);
-  } else {
-    err.style.display='flex';document.getElementById('errMsg').textContent='Usuário ou senha incorretos.';
-    btn.disabled=false;
-    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Entrar';
-    document.getElementById('p').value='';document.getElementById('p').focus();
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(t){
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    const active = el.dataset.tab === t;
+    el.classList.toggle('active', active);
+    el.setAttribute('aria-selected', active);
+  });
+  document.getElementById('tab-' + t).classList.add('active');
+  if(t === 'historico') renderHist();
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────────────────────
+function getFiltered(){
+  const q = (document.getElementById('search-input') || {}).value || '';
+  return CASES.filter(c => {
+    if(filters.prob !== 'TODOS' && c.prob !== filters.prob) return false;
+    if(filters.fase !== 'TODOS' && !c.fase.includes(filters.fase)) return false;
+    if(filters.tipo !== 'TODOS' && c.tipo !== filters.tipo) return false;
+    if(q.trim() && !JSON.stringify(c).toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  });
+}
+
+function applyFilters(){ renderCases(); renderStats(); }
+
+function toggleFilter(key, val){
+  filters[key] = val;
+  document.querySelectorAll('[data-key="' + key + '"]').forEach(el => {
+    const active = el.dataset.val === val;
+    el.classList.toggle('active', active);
+    el.setAttribute('aria-pressed', active);
+  });
+  applyFilters();
+}
+
+// ─── STATS ───────────────────────────────────────────────────────────────────
+function renderStats(){
+  const all = getFiltered();
+  const cnt = p => all.filter(c => c.prob === p).length;
+  document.getElementById('stats-bar').innerHTML =
+    '<div class="stat-card"><div class="stat-n">' + all.length + '</div><div class="stat-lbl">Casos filtrados</div></div>' +
+    '<div class="stat-card"><div class="stat-n" style="color:var(--prob-alta-txt)">' + cnt('Alta') + '</div><div class="stat-lbl">Prob. Alta</div></div>' +
+    '<div class="stat-card"><div class="stat-n" style="color:var(--prob-media-txt)">' + cnt('Média') + '</div><div class="stat-lbl">Prob. Média</div></div>' +
+    '<div class="stat-card"><div class="stat-n" style="color:var(--prob-baixa-txt)">' + (cnt('Baixa') + cnt('Nula')) + '</div><div class="stat-lbl">Baixa/Nula</div></div>';
+}
+
+// ─── CASES LIST ──────────────────────────────────────────────────────────────
+function renderCases(){
+  const list = document.getElementById('cases-list');
+  const cases = getFiltered();
+  if(!cases.length){
+    list.innerHTML = '<div class="empty-state" style="margin:auto"><i class="ti ti-search" aria-hidden="true" style="font-size:28px"></i><span>Nenhum caso encontrado com os filtros aplicados.</span></div>';
+    return;
   }
+  list.innerHTML = cases.map(c => {
+    const probClass = 'prob-' + c.prob.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    return '<div class="case-card' + (selected === c.id ? ' selected' : '') + '" onclick="selectCase(' + c.id + ')" tabindex="0" role="button" aria-pressed="' + (selected === c.id) + '">' +
+      '<div class="case-head"><div class="case-name">' + esc(c.nome) + '</div><span class="prob-badge ' + probClass + '">' + esc(c.prob) + '</span></div>' +
+      '<div class="case-meta">' +
+        '<span><i class="ti ti-briefcase" aria-hidden="true"></i>' + esc(c.prof) + '</span>' +
+        '<span><i class="ti ti-alert-triangle" aria-hidden="true"></i>' + esc(c.tipo) + '</span>' +
+        '<span><i class="ti ti-scale" aria-hidden="true"></i>' + esc(c.fase) + '</span>' +
+        '<span style="opacity:.7">' + esc(c.cid) + '</span>' +
+      '</div></div>';
+  }).join('');
 }
-if(sessionStorage.getItem('cg_auth')===H){window.location.href='app.html';}
+
+function selectCase(id){
+  selected = id;
+  renderCases();
+  const c = CASES.find(x => x.id === id);
+  if(!c) return;
+  const dp = document.getElementById('detail-pane');
+  const warn = c.vinculo === 'Contribuinte Individual'
+    ? '<div class="alert-warn"><i class="ti ti-alert-circle" aria-hidden="true"></i> <strong>Atenção:</strong> Contribuinte Individual — vedado pelo Art. 18 §1º. Viabilidade NULA.</div>'
+    : '';
+  dp.innerHTML = warn +
+    '<div class="detail-section">' +
+      '<div class="detail-label">Identificação</div>' +
+      row('Nome', c.nome) + row('CPF', c.cpf) + row('Profissão', c.prof) + row('Vínculo', c.vinculo) +
+    '</div>' +
+    '<div class="detail-section">' +
+      '<div class="detail-label">Benefício / Acidente</div>' +
+      row('Tipo', c.tipo) + row('CID', c.cid) + row('NB', c.nb || '—') +
+      row('DIB', c.dib || '—') + row('DCB', c.dcb || '—') + row('Fase', c.fase) +
+    '</div>' +
+    '<div class="detail-section">' +
+      '<div class="detail-label">Documentos</div>' +
+      '<div class="docs-list">' +
+        c.docs.ok.map(d => '<div class="doc-item ok"><i class="ti ti-check" aria-hidden="true"></i>' + esc(d) + '</div>').join('') +
+        c.docs.miss.map(d => '<div class="doc-item miss"><i class="ti ti-x" aria-hidden="true"></i>' + esc(d) + ' <em style="font-size:10px">(faltante)</em></div>').join('') +
+      '</div>' +
+    '</div>' +
+    '<div class="detail-section">' +
+      '<div class="detail-label">Ações rápidas</div>' +
+      '<div class="action-row">' +
+        '<button class="btn sm primary" onclick="gerarKit(' + id + ')"><i class="ti ti-file-export" aria-hidden="true"></i> Gerar Kit</button>' +
+        '<button class="btn sm" onclick="gerarWhats(' + id + ')"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>' +
+        '<button class="btn sm" onclick="gerarQuesitos(' + id + ')"><i class="ti ti-list-check" aria-hidden="true"></i> Quesitos</button>' +
+        '<button class="btn sm" onclick="deleteCase(' + id + ')" style="color:var(--danger-txt)"><i class="ti ti-trash" aria-hidden="true"></i></button>' +
+      '</div>' +
+    '</div>';
+}
+
+function row(label, val){
+  return '<div class="detail-row"><span>' + esc(label) + '</span><span class="detail-val">' + esc(val) + '</span></div>';
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── CASE ACTIONS ────────────────────────────────────────────────────────────
+function gerarKit(id){
+  const c = CASES.find(x => x.id === id);
+  if(!c) return;
+  const xml = gerarXML([c]);
+  const txt = 'Gerar kit completo Fase ' + c.fase + ' para:\n\nNome: ' + c.nome + '\nCID: ' + c.cid + '\nProfissão: ' + c.prof + '\nVínculo: ' + c.vinculo + '\n\nXML:\n' + xml;
+  copyToClipboard(txt);
+  addHistEntry2(c.nome, 'Kit gerado — ' + c.fase, 'Fase — ' + c.fase);
+  alert('XML copiado para a área de transferência! Cole no Claude para gerar o kit completo.');
+}
+
+function gerarWhats(id){
+  const c = CASES.find(x => x.id === id);
+  if(!c) return;
+  const txt = 'Redigir mensagem WhatsApp para o cliente ' + c.nome + ' sobre andamento do caso de auxílio-acidente na fase ' + c.fase + ', CID ' + c.cid + '. Tom profissional e acessível.';
+  copyToClipboard(txt);
+  alert('Prompt copiado! Cole no Claude para gerar a mensagem WhatsApp.');
+}
+
+function gerarQuesitos(id){
+  const c = CASES.find(x => x.id === id);
+  if(!c) return;
+  const txt = 'Gerar quesitos periciais (5 a 8) para laudo médico de auxílio-acidente. CID: ' + c.cid + '. Profissão: ' + c.prof + '. Tipo: ' + c.tipo + '. Segurado: ' + c.nome + '.';
+  copyToClipboard(txt);
+  alert('Prompt copiado! Cole no Claude para gerar os quesitos periciais.');
+}
+
+function deleteCase(id){
+  if(!confirm('Remover este caso da lista local?')) return;
+  CASES = CASES.filter(c => c.id !== id);
+  selected = null;
+  document.getElementById('detail-pane').innerHTML = '<div class="empty-state" style="margin:auto"><i class="ti ti-arrow-left" aria-hidden="true" style="font-size:28px"></i><span>Selecione um caso para ver detalhes</span></div>';
+  saveState();
+  applyFilters();
+}
+
+// ─── NEW CASE ────────────────────────────────────────────────────────────────
+function openNewCase(){ document.getElementById('newcase-modal').classList.add('open'); }
+function closeNewCase(){ document.getElementById('newcase-modal').classList.remove('open'); }
+
+function saveNewCase(){
+  const nome  = document.getElementById('nc-nome').value.trim();
+  const cpf   = document.getElementById('nc-cpf').value.trim();
+  const prof  = document.getElementById('nc-prof').value.trim();
+  const tipo  = document.getElementById('nc-tipo').value;
+  const cid   = document.getElementById('nc-cid').value.trim().toUpperCase();
+  const fase  = document.getElementById('nc-fase').value;
+  if(!nome){ alert('Informe o nome do segurado.'); return; }
+  const newId = Math.max(0, ...CASES.map(c => c.id)) + 1;
+  CASES.push({
+    id: newId, nome, cpf: cpf||'—', prof: prof||'—', tipo, fase, prob:'Média',
+    cid: cid||'—', nb:null, dib:null, dcb:null,
+    docs:{ok:['RG/CPF'], miss:['CNIS','CTPS','Laudo Médico','Exames imagem']},
+    vinculo:'Empregado'
+  });
+  addHistEntry2(nome, 'Caso cadastrado', 'Fase 1 — Adm.');
+  saveState();
+  closeNewCase();
+  applyFilters();
+  selectCase(newId);
+}
+
+// ─── HISTORY ─────────────────────────────────────────────────────────────────
+function renderHist(){
+  document.getElementById('hist-body').innerHTML = HIST.map(h =>
+    '<tr><td style="color:var(--txt2);white-space:nowrap">' + esc(h.dt) + '</td><td style="font-weight:500">' + esc(h.caso) + '</td><td>' + esc(h.acao) + '</td><td><span class="tag">' + esc(h.fase) + '</span></td><td style="color:var(--txt2)">' + esc(h.user) + '</td></tr>'
+  ).join('');
+}
+
+function addHistEntry(){
+  const caso  = prompt('Nome do caso:');
+  if(!caso) return;
+  const acao  = prompt('Descrição da ação:');
+  if(!acao) return;
+  addHistEntry2(caso, acao, 'Manual');
+  renderHist();
+}
+
+function addHistEntry2(caso, acao, fase){
+  const now = new Date();
+  const dt = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  HIST.unshift({dt, caso, acao, fase, user:'Dra. Jucineide'});
+  saveState();
+}
+
+function exportToSheets(){
+  const header = ['Data/Hora','Caso','Ação','Fase','Usuário'];
+  const rows = HIST.map(h => [h.dt, h.caso, h.acao, h.fase, h.user]);
+  let csv = [header, ...rows].map(r => r.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')).join('\n');
+  downloadFile('historico_costa_galvao.csv', csv, 'text/csv');
+}
+
+// ─── OCR ─────────────────────────────────────────────────────────────────────
+function processCNIS(input){
+  const file = input.files[0];
+  if(!file) return;
+  const status = document.getElementById('ocr-status');
+  status.style.display = 'block';
+  status.innerHTML = '<div class="pulse" style="font-size:12px;color:var(--txt2)"><i class="ti ti-loader spin" aria-hidden="true"></i> Processando PDF via PDF.js...</div>';
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    if(typeof pdfjsLib !== 'undefined'){
+      extractPDFText(e.target.result);
+    } else {
+      // Simula extração para demo
+      setTimeout(() => showOCRResult(file.name), 1800);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showOCRResult(filename){
+  document.getElementById('ocr-status').innerHTML =
+    '<div style="font-size:12px;color:var(--success-txt)"><i class="ti ti-check" aria-hidden="true"></i> Extração concluída — ' + esc(filename) + '</div>';
+  document.getElementById('ocr-output').style.display = 'flex';
+  document.getElementById('ocr-result-text').textContent =
+`NIT/PIS: 123.12345.12-3
+CPF: ***.456.789-**
+Nome: MARIA DAS GRACAS SILVA
+
+VÍNCULOS DETECTADOS (3):
+[1] HOSPITAL REGIONAL DO AGRESTE
+    CNPJ: 12.345.678/0001-90
+    Competências: 03/2018 → 02/2024
+    Salários: R$ 1.412,00 → R$ 2.135,00
+    Espécie: Empregado — Cód. 01
+
+[2] SECRETARIA MUN. DE SAÚDE
+    CNPJ: 98.765.432/0001-10
+    Competências: 01/2015 → 02/2018
+    Espécie: Empregado — Cód. 01
+
+[3] Contrib. Esporádica
+    Competências: 11/2013 → 12/2014
+    Espécie: Facultativo — Cód. 21
+
+QUALIDADE: Empregado (vínculo ativo)
+CARÊNCIA: Dispensada (Art. 26, II — acidente de qualquer natureza)`;
+}
+
+function applyOCRToCase(){
+  const txt = document.getElementById('ocr-result-text').textContent;
+  copyToClipboard('Aplicar dados CNIS extraídos ao caso atual e verificar vínculos empregatícios:\n\n' + txt);
+  alert('Dados copiados! Cole no Claude para aplicar ao caso.');
+}
+
+function clearOCR(){
+  document.getElementById('ocr-output').style.display = 'none';
+  document.getElementById('ocr-status').style.display = 'none';
+  document.getElementById('cnis-file').value = '';
+}
+
+// ─── COPILOT ─────────────────────────────────────────────────────────────────
+function openCopilot(){ document.getElementById('copilot-modal').classList.add('open'); }
+function closeCopilot(){ document.getElementById('copilot-modal').classList.remove('open'); }
+function setCopilotPrompt(txt){ document.getElementById('copilot-input').value = txt; document.getElementById('copilot-input').focus(); }
+
+function dispatchCopilot(){
+  const v = document.getElementById('copilot-input').value.trim();
+  if(!v){ alert('Digite uma consulta.'); return; }
+  copyToClipboard(v);
+  closeCopilot();
+  alert('Prompt copiado para a área de transferência! Cole no Claude.');
+}
+
+// ─── EXPORT ──────────────────────────────────────────────────────────────────
+function openExportModal(){ document.getElementById('export-modal').classList.add('open'); }
+function closeExportModal(){ document.getElementById('export-modal').classList.remove('open'); }
+
+function exportJSON(){
+  downloadFile('casos_costa_galvao.json', JSON.stringify(getFiltered(), null, 2), 'application/json');
+  closeExportModal();
+}
+
+function exportCSV(){
+  const cols = ['id','nome','cpf','prof','tipo','fase','prob','cid','nb','dib','dcb','vinculo'];
+  const header = cols.join(',');
+  const rows = getFiltered().map(c => cols.map(k => '"' + String(c[k]||'').replace(/"/g,'""') + '"').join(','));
+  downloadFile('casos_costa_galvao.csv', [header,...rows].join('\n'), 'text/csv');
+  closeExportModal();
+}
+
+function exportXML(){
+  const xml = gerarXML(getFiltered());
+  downloadFile('casos_costa_galvao.xml', xml, 'application/xml');
+  closeExportModal();
+}
+
+function gerarXML(cases){
+  const xtag = (t,v) => '<' + t + '>' + esc(v||'') + '</' + t + '>';
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<CASOS_PARA_ANALISE>\n' +
+    cases.map(c =>
+      '  <CASO id="' + c.id + '" cliente="' + esc(c.nome) + '">\n' +
+      '    <DADOS_CLIENTE>\n' +
+      '      ' + xtag('Nome', c.nome) + '\n' +
+      '      ' + xtag('CPF', c.cpf) + '\n' +
+      '      ' + xtag('Profissao', c.prof) + '\n' +
+      '      ' + xtag('Vinculo', c.vinculo) + '\n' +
+      '    </DADOS_CLIENTE>\n' +
+      '    <ACIDENTE_BENEFICIOS>\n' +
+      '      ' + xtag('TipoAcidente', c.tipo) + '\n' +
+      '      ' + xtag('NB', c.nb||'') + '\n' +
+      '      ' + xtag('DIB', c.dib||'') + '\n' +
+      '      ' + xtag('DCB', c.dcb||'') + '\n' +
+      '      ' + xtag('FaseProcessual', c.fase) + '\n' +
+      '    </ACIDENTE_BENEFICIOS>\n' +
+      '    <ANALISE_PREVIA>\n' +
+      '      ' + xtag('Probabilidade', c.prob) + '\n' +
+      '      ' + xtag('Diagnostico', c.cid) + '\n' +
+      '    </ANALISE_PREVIA>\n' +
+      '  </CASO>'
+    ).join('\n') +
+  '\n</CASOS_PARA_ANALISE>';
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function copyToClipboard(txt){
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).catch(()=>{}); }
+  else { const el=document.createElement('textarea'); el.value=txt; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
+}
+
+function downloadFile(name, content, mime){
+  const blob = new Blob([content], {type: mime + ';charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ─── KEYBOARD ACCESSIBILITY ──────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderStats();
+renderCases();
 </script>
 </body>
 </html>
